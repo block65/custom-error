@@ -1,0 +1,6 @@
+{
+  "extends": ["../../.eslintrc.js"],
+  "env": {
+    "shared-node-browser": true
+  }
+}

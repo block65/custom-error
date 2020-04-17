@@ -1,0 +1,38 @@
+{
+  "name": "@colacube/custom-error",
+  "version": "1.1.0",
+  "private": false,
+  "license": "UNLICENSED",
+  "main": "dist/cjs.js",
+  "module": "dist/es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/cjs.js",
+    "dist/es.js",
+    "dist/*.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:clean": "rimraf dist/**",
+    "bundle": "rollup -c rollup.config.js",
+    "bundle:watch": "yarn bundle -w",
+    "prepare": "yarn build:clean && yarn build && yarn bundle",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@colacube/eslint-config": "^1.0.7",
+    "@types/jest": "^25.1.3",
+    "@types/node": "^13.7.7",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.1.0",
+    "jest-extended": "^0.11.5",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.32.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
+  }
+}
