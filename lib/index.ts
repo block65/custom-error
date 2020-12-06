@@ -1,6 +1,6 @@
 type DebugData = Record<string, unknown>;
 
-export const enum Status {
+export enum Status {
   OK = 0,
   CANCELLED,
   UNKNOWN,
