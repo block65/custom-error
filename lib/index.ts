@@ -49,7 +49,7 @@ export class CustomError extends Error {
   public debug(data: DebugData | undefined): this;
 
   public debug(data?: DebugData | undefined): this | (DebugData | undefined) {
-    if (data !== undefined) {
+    if (typeof data === 'undefined') {
       this.debugData = data;
       return this;
     }
