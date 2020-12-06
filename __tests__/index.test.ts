@@ -58,3 +58,9 @@ test('Default Status Code', async () => {
   const err = new CustomError('Test');
   expect(err.statusCode).toStrictEqual(Status.UNKNOWN);
 });
+
+test('Debug passing', async () => {
+  const err = new CustomError('Test');
+  const err2 = new CustomError('Test', err).debug(err.debug());
+  expect(err2.statusCode).toStrictEqual(Status.UNKNOWN);
+});
