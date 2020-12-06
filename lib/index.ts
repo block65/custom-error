@@ -1,12 +1,31 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type DebugData = any;
+type DebugData = Record<string, unknown>;
+
+export const enum Status {
+  OK = 0,
+  CANCELLED,
+  UNKNOWN,
+  INVALID_ARGUMENT,
+  DEADLINE_EXCEEDED,
+  NOT_FOUND,
+  ALREADY_EXISTS,
+  PERMISSION_DENIED,
+  RESOURCE_EXHAUSTED,
+  FAILED_PRECONDITION,
+  ABORTED,
+  OUT_OF_RANGE,
+  UNIMPLEMENTED,
+  INTERNAL,
+  UNAVAILABLE,
+  DATA_LOSS,
+  UNAUTHENTICATED,
+}
 
 export class CustomError extends Error {
   public previous?: Error;
 
-  public statusCode = 500;
+  public statusCode = Status.UNKNOWN;
 
-  public internal = true;
+  public sensitive = true;
 
   private debugData?: DebugData;
 
@@ -17,22 +36,21 @@ export class CustomError extends Error {
       value: new.target.name,
       enumerable: false,
       configurable: true, // so we can setName later
-    })
+    });
 
     this.previous = previous;
 
-    Error.captureStackTrace(this, this.constructor)
-    Object.setPrototypeOf(this, new.target.prototype)
-
+    Error.captureStackTrace(this, this.constructor);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 
-  public debug(): DebugData;
+  public debug(): DebugData | undefined;
 
-  public debug(...args: DebugData[]): this;
+  public debug(data: DebugData): this;
 
-  public debug(...args: DebugData[]): this | DebugData {
-    if (args.length) {
-      this.debugData = args.length === 1 ? args[0] : args;
+  public debug(data?: DebugData): this | (DebugData | undefined) {
+    if (data !== undefined) {
+      this.debugData = data;
       return this;
     }
     return this.debugData;

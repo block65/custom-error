@@ -1,5 +1,5 @@
 {
-  "name": "@colacube/custom-error",
+  "name": "@block65/custom-error",
   "version": "1.1.2",
   "private": false,
   "license": "UNLICENSED",
@@ -21,18 +21,21 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@block65/eslint-config": "^1.0.7",
-    "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.5",
-    "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.2",
-    "jest": "^26.0.1",
+    "@block65/eslint-config": "3.0.0",
+    "@types/jest": "^26.0.16",
+    "@types/node": "^14.14.10",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
+    "eslint": "^7.14.0",
+    "eslint-plugin-formatjs": "^2.9.10",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.6.3",
     "jest-extended": "^0.11.5",
-    "prettier": "^2.0.5",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.8.0",
+    "rollup": "^2.34.2",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "ts-jest": "^25.5.0",
-    "typescript": "^3.8.3"
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.2"
   }
 }
