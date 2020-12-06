@@ -16,7 +16,7 @@
     "build:clean": "rimraf dist/**",
     "bundle": "rollup -c rollup.config.js",
     "bundle:watch": "yarn bundle -w",
-    "prepare": "yarn build:clean && yarn build && yarn bundle",
+    "prepare": "yarn build:clean && yarn test && yarn build && yarn bundle",
     "test": "jest"
   },
   "dependencies": {},
