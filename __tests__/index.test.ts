@@ -64,3 +64,9 @@ test('Debug passing', async () => {
   const err2 = new CustomError('Test', err).debug(err.debug());
   expect(err2.statusCode).toStrictEqual(Status.UNKNOWN);
 });
+
+test('Previous errors', async () => {
+  const err = new CustomError('Test');
+  const err2 = new CustomError('Test', err).debug(err.debug());
+  expect(err2.previous).toBe(err);
+});
