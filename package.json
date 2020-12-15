@@ -1,6 +1,6 @@
 {
   "name": "@block65/custom-error",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "private": false,
   "license": "UNLICENSED",
   "main": "dist/cjs.js",
