@@ -40,7 +40,11 @@ export class CustomError extends Error {
 
     this.previous = previous;
 
-    Error.captureStackTrace(this, this.constructor);
+    // FF doesnt have captureStackTrace
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
