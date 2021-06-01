@@ -1,6 +1,4 @@
-module.exports = {
-  preset: 'ts-jest',
+export default {
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['jest-extended'],
-  testMatch: ['**/?(*.)+(spec|test).ts'],
+  testMatch: ['<rootDir>/__tests__/**/*.test.ts'],
 };

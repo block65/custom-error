@@ -1,12 +1,11 @@
 /* eslint-disable max-classes-per-file */
-import 'jest-extended';
-import { CustomError, Status } from '../lib';
+import { CustomError, Status } from '../lib/index';
 
 test('Non Custom Error', async () => {
   const err = new Error('Test');
   expect(err).toHaveProperty('name', 'Error');
-  expect(err.stack).toStartWith('Error');
-  expect(err.message).not.toStartWith('Error');
+  expect(err.stack?.startsWith('Error')).toBe(true);
+  expect(err.message.startsWith('Error')).not.toBe(true);
 });
 
 test('Vanilla', async () => {
@@ -31,11 +30,11 @@ test('Name Mangling + Subclassing', async () => {
 
   const errA = new A('Test');
   expect(errA).toHaveProperty('name', 'MyErrorA');
-  expect(errA.stack).toStartWith('MyErrorA');
+  expect(errA.stack?.startsWith('MyErrorA')).toBe(true);
 
   const errB = new B('Test');
   expect(errB).toHaveProperty('name', 'MyErrorB');
-  expect(errB.stack).toStartWith('MyErrorB');
+  expect(errB.stack?.startsWith('MyErrorB')).toBe(true);
 });
 
 test('Debug', async () => {
