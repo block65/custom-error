@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { CustomError, Status } from '../lib/index';
+import { CustomError, Status } from '../lib/index.js';
 
 test('Non Custom Error', async () => {
   const err = new Error('Test');
@@ -55,13 +55,181 @@ test('Debug', async () => {
 
 test('Default Status Code', async () => {
   const err = new CustomError('Test');
-  expect(err.statusCode).toStrictEqual(Status.UNKNOWN);
+  expect(err.status).toStrictEqual('UNKNOWN');
 });
 
 test('Debug passing', async () => {
   const err = new CustomError('Test');
   const err2 = new CustomError('Test', err).debug(err.debug());
-  expect(err2.statusCode).toStrictEqual(Status.UNKNOWN);
+  expect(err2.status).toStrictEqual('UNKNOWN');
+});
+
+test('toJSON', async () => {
+  const err = new CustomError('Test');
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "UNKNOWN",
+      "message": "Test",
+    }
+`);
+});
+
+test('toJSON ErrorInfo', async () => {
+  const err = new CustomError('Test').addDetail({
+    reason: 'bad-stuff-happened',
+    metadata: {
+      ka: 'boom',
+    },
+  });
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "UNKNOWN",
+      "details": Array [
+        Object {
+          "metadata": Object {
+            "ka": "boom",
+          },
+          "reason": "bad-stuff-happened",
+        },
+      ],
+      "message": "Test",
+    }
+  `);
+});
+
+test('toJSON RetryInfo', async () => {
+  const err = new CustomError('Test').addDetail({
+    delay: 1000,
+  });
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "UNKNOWN",
+      "details": Array [
+        Object {
+          "delay": 1000,
+        },
+      ],
+      "message": "Test",
+    }
+  `);
+});
+
+test('toJSON QuotaFailure', async () => {
+  const err = new CustomError('Test').addDetail({
+    violations: [
+      { subject: 'account:12345', description: 'Too many sites oreddi' },
+    ],
+  });
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "UNKNOWN",
+      "details": Array [
+        Object {
+          "violations": Array [
+            Object {
+              "description": "Too many sites oreddi",
+              "subject": "account:12345",
+            },
+          ],
+        },
+      ],
+      "message": "Test",
+    }
+  `);
+});
+
+test('toJSON BadRequest', async () => {
+  class RestApiValidationError extends CustomError {
+    constructor(message: string, previous?: Error) {
+      super(message, previous);
+      this.code = Status.INVALID_ARGUMENT;
+    }
+  }
+
+  const err = new RestApiValidationError('Test').addDetail({
+    violations: [
+      { field: 'site.name', description: 'Must be longer than 2 characters' },
+    ],
+  });
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "INVALID_ARGUMENT",
+      "details": Array [
+        Object {
+          "violations": Array [
+            Object {
+              "description": "Must be longer than 2 characters",
+              "field": "site.name",
+            },
+          ],
+        },
+      ],
+      "message": "Test",
+    }
+  `);
+});
+
+test('Multis', async () => {
+  class QuotaExceededError extends CustomError {
+    constructor(message: string, previous?: Error) {
+      super(message, previous);
+      this.code = Status.RESOURCE_EXHAUSTED;
+      this.addDetail({
+        url: 'https://www.example.com',
+        description: 'Some website',
+      });
+    }
+  }
+
+  const err = new QuotaExceededError('Test').addDetail({
+    locale: 'en',
+    message: 'You ran out of stuff',
+  });
+  expect(err.toJSON()).toMatchInlineSnapshot(`
+    Object {
+      "code": "RESOURCE_EXHAUSTED",
+      "details": Array [
+        Object {
+          "description": "Some website",
+          "url": "https://www.example.com",
+        },
+        Object {
+          "locale": "en",
+          "message": "You ran out of stuff",
+        },
+      ],
+      "message": "Test",
+    }
+  `);
+  expect(Object.entries(err)).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "code",
+        8,
+      ],
+      Array [
+        "status",
+        "UNKNOWN",
+      ],
+      Array [
+        "previous",
+        undefined,
+      ],
+      Array [
+        "details",
+        Array [
+          Object {
+            "description": "Some website",
+            "url": "https://www.example.com",
+          },
+          Object {
+            "locale": "en",
+            "message": "You ran out of stuff",
+          },
+        ],
+      ],
+    ]
+`);
 });
 
 test('Previous errors', async () => {

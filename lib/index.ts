@@ -20,15 +20,116 @@ export enum Status {
   UNAUTHENTICATED,
 }
 
+const defaultHttpMapping: Map<Status, number> = new Map([
+  [Status.OK, 200],
+  [Status.INVALID_ARGUMENT, 400],
+  [Status.FAILED_PRECONDITION, 400],
+  [Status.OUT_OF_RANGE, 400],
+  [Status.UNAUTHENTICATED, 401],
+  [Status.PERMISSION_DENIED, 403],
+  [Status.NOT_FOUND, 404],
+  [Status.ABORTED, 409],
+  [Status.ALREADY_EXISTS, 409],
+  [Status.RESOURCE_EXHAUSTED, 429],
+  [Status.CANCELLED, 499],
+  [Status.DATA_LOSS, 500],
+  [Status.UNKNOWN, 500],
+  [Status.INTERNAL, 500],
+  [Status.UNIMPLEMENTED, 501],
+  // [Code.LOCAL_OUTAGE,  502],
+  [Status.UNAVAILABLE, 503],
+  [Status.DEADLINE_EXCEEDED, 504],
+]);
+
+interface ErrorInfo {
+  reason: string;
+  metadata: Record<string, string>;
+}
+
+interface RetryInfo {
+  delay: number;
+}
+
+interface BadRequest {
+  violations: { field: string; description: string }[];
+}
+
+interface LocalisedMessage {
+  locale: 'en';
+  message: string;
+}
+
+interface Help {
+  url: string;
+  description: string;
+}
+
+export interface QuotaFailure {
+  violations: {
+    /**
+     * subject of which quota check failed ie: `account:1234567`
+     */
+    subject: string;
+    /**
+     * description of quota failure
+     */
+    description: string;
+  }[];
+}
+
+export enum ErrorReason {
+  ERROR_REASON_UNSPECIFIED = 0,
+  SERVICE_DISABLED = 1,
+  BILLING_DISABLED = 2,
+  API_KEY_INVALID = 3,
+  API_KEY_SERVICE_BLOCKED = 4,
+  API_KEY_HTTP_REFERRER_BLOCKED = 7,
+  API_KEY_IP_ADDRESS_BLOCKED = 8,
+  API_KEY_ANDROID_APP_BLOCKED = 9,
+  API_KEY_IOS_APP_BLOCKED = 13,
+  RATE_LIMIT_EXCEEDED = 5,
+  RESOURCE_QUOTA_EXCEEDED = 6,
+  LOCATION_TAX_POLICY_VIOLATED = 10,
+  USER_PROJECT_DENIED = 11,
+  CONSUMER_SUSPENDED = 12,
+  CONSUMER_INVALID = 14,
+  SECURITY_POLICY_VIOLATED = 15,
+  ACCESS_TOKEN_EXPIRED = 16,
+  ACCESS_TOKEN_SCOPE_INSUFFICIENT = 17,
+  ACCOUNT_STATE_INVALID = 18,
+  ACCESS_TOKEN_TYPE_UNSUPPORTED = 19,
+}
+
+type ErrorDetail =
+  | ErrorInfo
+  | RetryInfo
+  | QuotaFailure
+  | BadRequest
+  | LocalisedMessage
+  | Help;
+
+export interface CustomErrorSerialized {
+  message: string;
+  code: keyof typeof Status | string;
+  details?: ErrorDetail[];
+}
+
 export class CustomError extends Error {
-  public previous?: Error;
+  public previous?: Error | CustomError;
 
-  public statusCode = Status.UNKNOWN;
+  private details?: ErrorDetail[];
 
-  public sensitive = true;
+  public code = Status.UNKNOWN;
+
+  public status = Status[Status.UNKNOWN];
 
   private debugData?: DebugData;
 
+  /**
+   *
+   * @param {string} message Developer facing message, in English.
+   * @param {Error} previous
+   */
   constructor(message: string, previous?: Error) {
     super(message);
 
@@ -54,7 +155,10 @@ export class CustomError extends Error {
 
   public debug(data?: DebugData | undefined): this | (DebugData | undefined) {
     if (arguments.length > 0) {
-      this.debugData = data;
+      this.debugData = {
+        ...this.debugData,
+        ...data,
+      };
       return this;
     }
 
@@ -65,5 +169,22 @@ export class CustomError extends Error {
     Object.defineProperty(this, 'name', {
       value: name,
     });
+  }
+
+  public get httpStatusCode() {
+    return defaultHttpMapping.get(this.code) || 500;
+  }
+
+  public addDetail(...details: ErrorDetail[]): this {
+    this.details = (this.details || []).concat(details);
+    return this;
+  }
+
+  public toJSON(): CustomErrorSerialized {
+    return {
+      message: this.message,
+      code: Status[this.code],
+      ...(this.details && { details: this.details }),
+    };
   }
 }
