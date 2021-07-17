@@ -197,33 +197,29 @@ test('Multis', async () => {
     }
   `);
   expect(Object.entries(err)).toMatchInlineSnapshot(`
+Array [
+  Array [
+    "code",
+    8,
+  ],
+  Array [
+    "previous",
+    undefined,
+  ],
+  Array [
+    "details",
     Array [
-      Array [
-        "code",
-        8,
-      ],
-      Array [
-        "status",
-        "UNKNOWN",
-      ],
-      Array [
-        "previous",
-        undefined,
-      ],
-      Array [
-        "details",
-        Array [
-          Object {
-            "description": "Some website",
-            "url": "https://www.example.com",
-          },
-          Object {
-            "locale": "en",
-            "message": "You ran out of stuff",
-          },
-        ],
-      ],
-    ]
+      Object {
+        "description": "Some website",
+        "url": "https://www.example.com",
+      },
+      Object {
+        "locale": "en",
+        "message": "You ran out of stuff",
+      },
+    ],
+  ],
+]
 `);
 });
 
@@ -231,4 +227,27 @@ test('Previous errors', async () => {
   const err = new CustomError('Test');
   const err2 = new CustomError('Test', err).debug(err.debug());
   expect(err2.previous).toBe(err);
+});
+
+test('serialize/unserialize', async () => {
+  const err = new CustomError('Test').addDetail({
+    locale: 'en',
+    message: 'woo yeah',
+  });
+  const serialized = err.serialize();
+  const clone = CustomError.fromJSON(serialized);
+
+  expect(clone.serialize()).toMatchInlineSnapshot(`
+    Object {
+      "code": "UNKNOWN",
+      "details": Array [
+        Object {
+          "locale": "en",
+          "message": "woo yeah",
+        },
+      ],
+      "message": "woo yeah",
+    }
+`);
+  expect(clone.serialize()).toMatchObject(err.serialize());
 });

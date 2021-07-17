@@ -121,8 +121,6 @@ export class CustomError extends Error {
 
   public code = Status.UNKNOWN;
 
-  public status = Status[Status.UNKNOWN];
-
   private debugData?: DebugData;
 
   /**
@@ -175,6 +173,10 @@ export class CustomError extends Error {
     return defaultHttpMapping.get(this.code) || 500;
   }
 
+  public get status() {
+    return Status[this.code];
+  }
+
   public addDetail(...details: ErrorDetail[]): this {
     this.details = (this.details || []).concat(details);
     return this;
@@ -189,5 +191,16 @@ export class CustomError extends Error {
       code: Status[this.code],
       ...(this.details && { details: this.details }),
     };
+  }
+
+  public static fromJSON(params: CustomErrorSerialized): CustomError {
+    return Object.assign(
+      new CustomError(params.message || 'Error').addDetail(
+        ...(params.details || []),
+      ),
+      {
+        code: Status[parseInt(params.code, 10)] || Status.UNKNOWN,
+      },
+    );
   }
 }
