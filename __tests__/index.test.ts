@@ -66,10 +66,9 @@ test('Debug passing', async () => {
 
 test('toJSON', async () => {
   const err = new CustomError('Test');
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "UNKNOWN",
-      "message": "Test",
     }
 `);
 });
@@ -81,7 +80,7 @@ test('toJSON ErrorInfo', async () => {
       ka: 'boom',
     },
   });
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "UNKNOWN",
       "details": Array [
@@ -92,7 +91,6 @@ test('toJSON ErrorInfo', async () => {
           "reason": "bad-stuff-happened",
         },
       ],
-      "message": "Test",
     }
   `);
 });
@@ -101,7 +99,7 @@ test('toJSON RetryInfo', async () => {
   const err = new CustomError('Test').addDetail({
     delay: 1000,
   });
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "UNKNOWN",
       "details": Array [
@@ -109,7 +107,6 @@ test('toJSON RetryInfo', async () => {
           "delay": 1000,
         },
       ],
-      "message": "Test",
     }
   `);
 });
@@ -120,7 +117,7 @@ test('toJSON QuotaFailure', async () => {
       { subject: 'account:12345', description: 'Too many sites oreddi' },
     ],
   });
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "UNKNOWN",
       "details": Array [
@@ -133,7 +130,6 @@ test('toJSON QuotaFailure', async () => {
           ],
         },
       ],
-      "message": "Test",
     }
   `);
 });
@@ -148,23 +144,22 @@ test('toJSON BadRequest', async () => {
 
   const err = new RestApiValidationError('Test').addDetail({
     violations: [
-      { field: 'site.name', description: 'Must be longer than 2 characters' },
+      { field: 'site.name', description: 'must be longer than 2 characters' },
     ],
   });
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "INVALID_ARGUMENT",
       "details": Array [
         Object {
           "violations": Array [
             Object {
-              "description": "Must be longer than 2 characters",
+              "description": "must be longer than 2 characters",
               "field": "site.name",
             },
           ],
         },
       ],
-      "message": "Test",
     }
   `);
 });
@@ -185,7 +180,7 @@ test('Multis', async () => {
     locale: 'en',
     message: 'You ran out of stuff',
   });
-  expect(err.toJSON()).toMatchInlineSnapshot(`
+  expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": "RESOURCE_EXHAUSTED",
       "details": Array [
@@ -198,7 +193,7 @@ test('Multis', async () => {
           "message": "You ran out of stuff",
         },
       ],
-      "message": "Test",
+      "message": "You ran out of stuff",
     }
   `);
   expect(Object.entries(err)).toMatchInlineSnapshot(`

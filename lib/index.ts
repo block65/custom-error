@@ -30,7 +30,7 @@ const defaultHttpMapping: Map<Status, number> = new Map([
   [Status.NOT_FOUND, 404],
   [Status.ABORTED, 409],
   [Status.ALREADY_EXISTS, 409],
-  [Status.RESOURCE_EXHAUSTED, 429],
+  [Status.RESOURCE_EXHAUSTED, 403],
   [Status.CANCELLED, 499],
   [Status.DATA_LOSS, 500],
   [Status.UNKNOWN, 500],
@@ -109,8 +109,8 @@ type ErrorDetail =
   | Help;
 
 export interface CustomErrorSerialized {
-  message: string;
   code: keyof typeof Status | string;
+  message?: string;
   details?: ErrorDetail[];
 }
 
@@ -180,9 +180,12 @@ export class CustomError extends Error {
     return this;
   }
 
-  public toJSON(): CustomErrorSerialized {
+  public serialize(): CustomErrorSerialized {
+    const localised = this.details?.find(
+      (detail): detail is LocalisedMessage => 'locale' in detail,
+    );
     return {
-      message: this.message,
+      ...(localised?.message && { message: localised?.message }),
       code: Status[this.code],
       ...(this.details && { details: this.details }),
     };
