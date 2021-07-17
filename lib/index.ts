@@ -115,9 +115,9 @@ export interface CustomErrorSerialized {
 }
 
 export class CustomError extends Error {
-  public previous?: Error | CustomError;
+  public readonly previous?: Error | CustomError;
 
-  private details?: ErrorDetail[];
+  public details?: ErrorDetail[];
 
   public code = Status.UNKNOWN;
 
