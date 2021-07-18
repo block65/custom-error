@@ -86,7 +86,8 @@ type ErrorDetail =
   | Help;
 
 export interface CustomErrorSerialized {
-  code: keyof typeof Status | string;
+  code: Status;
+  status: keyof typeof Status;
   message?: string;
   details?: ErrorDetail[];
 }
@@ -150,8 +151,8 @@ export class CustomError extends Error {
     return defaultHttpMapping.get(this.code) || 500;
   }
 
-  public get status() {
-    return Status[this.code];
+  public get status(): keyof typeof Status {
+    return Status[this.code] as keyof typeof Status;
   }
 
   public addDetail(...details: ErrorDetail[]): this {
@@ -165,7 +166,8 @@ export class CustomError extends Error {
     );
     return {
       ...(localised?.message && { message: localised?.message }),
-      code: Status[this.code],
+      code: this.code,
+      status: this.status,
       ...(this.details && { details: this.details }),
     };
   }
@@ -176,7 +178,7 @@ export class CustomError extends Error {
         ...(params.details || []),
       ),
       {
-        code: Status[parseInt(params.code, 10)] || Status.UNKNOWN,
+        code: params.code || Status.UNKNOWN,
       },
     );
   }

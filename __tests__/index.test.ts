@@ -68,9 +68,10 @@ test('toJSON', async () => {
   const err = new CustomError('Test');
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "UNKNOWN",
+      "code": 2,
+      "status": "UNKNOWN",
     }
-`);
+  `);
 });
 
 test('toJSON ErrorInfo', async () => {
@@ -82,7 +83,7 @@ test('toJSON ErrorInfo', async () => {
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "UNKNOWN",
+      "code": 2,
       "details": Array [
         Object {
           "metadata": Object {
@@ -91,6 +92,7 @@ test('toJSON ErrorInfo', async () => {
           "reason": "bad-stuff-happened",
         },
       ],
+      "status": "UNKNOWN",
     }
   `);
 });
@@ -101,12 +103,13 @@ test('toJSON RetryInfo', async () => {
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "UNKNOWN",
+      "code": 2,
       "details": Array [
         Object {
           "delay": 1000,
         },
       ],
+      "status": "UNKNOWN",
     }
   `);
 });
@@ -119,7 +122,7 @@ test('toJSON QuotaFailure', async () => {
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "UNKNOWN",
+      "code": 2,
       "details": Array [
         Object {
           "violations": Array [
@@ -130,6 +133,7 @@ test('toJSON QuotaFailure', async () => {
           ],
         },
       ],
+      "status": "UNKNOWN",
     }
   `);
 });
@@ -149,7 +153,7 @@ test('toJSON BadRequest', async () => {
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "INVALID_ARGUMENT",
+      "code": 3,
       "details": Array [
         Object {
           "violations": Array [
@@ -160,6 +164,7 @@ test('toJSON BadRequest', async () => {
           ],
         },
       ],
+      "status": "INVALID_ARGUMENT",
     }
   `);
 });
@@ -182,7 +187,7 @@ test('Multis', async () => {
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "RESOURCE_EXHAUSTED",
+      "code": 8,
       "details": Array [
         Object {
           "description": "Some website",
@@ -194,33 +199,9 @@ test('Multis', async () => {
         },
       ],
       "message": "You ran out of stuff",
+      "status": "RESOURCE_EXHAUSTED",
     }
   `);
-  expect(Object.entries(err)).toMatchInlineSnapshot(`
-Array [
-  Array [
-    "code",
-    8,
-  ],
-  Array [
-    "previous",
-    undefined,
-  ],
-  Array [
-    "details",
-    Array [
-      Object {
-        "description": "Some website",
-        "url": "https://www.example.com",
-      },
-      Object {
-        "locale": "en",
-        "message": "You ran out of stuff",
-      },
-    ],
-  ],
-]
-`);
 });
 
 test('Previous errors', async () => {
@@ -239,7 +220,7 @@ test('serialize/unserialize', async () => {
 
   expect(clone.serialize()).toMatchInlineSnapshot(`
     Object {
-      "code": "UNKNOWN",
+      "code": 2,
       "details": Array [
         Object {
           "locale": "en",
@@ -247,7 +228,8 @@ test('serialize/unserialize', async () => {
         },
       ],
       "message": "woo yeah",
+      "status": "UNKNOWN",
     }
-`);
+  `);
   expect(clone.serialize()).toMatchObject(err.serialize());
 });
