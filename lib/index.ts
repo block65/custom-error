@@ -77,7 +77,7 @@ export interface QuotaFailure {
   }[];
 }
 
-type ErrorDetail =
+export type ErrorDetail =
   | ErrorInfo
   | RetryInfo
   | QuotaFailure
