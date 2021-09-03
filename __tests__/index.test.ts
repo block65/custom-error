@@ -10,31 +10,7 @@ test('Non Custom Error', async () => {
 
 test('Vanilla', async () => {
   const err = new CustomError('Test');
-  expect(err).toHaveProperty('name', 'CustomError');
-});
-
-test('Name Mangling + Subclassing', async () => {
-  class A extends CustomError {
-    constructor(msg: string) {
-      super(msg);
-      this.setName('MyErrorA');
-    }
-  }
-
-  class B extends A {
-    constructor(msg: string) {
-      super(msg);
-      this.setName('MyErrorB');
-    }
-  }
-
-  const errA = new A('Test');
-  expect(errA).toHaveProperty('name', 'MyErrorA');
-  expect(errA.stack?.startsWith('MyErrorA')).toBe(true);
-
-  const errB = new B('Test');
-  expect(errB).toHaveProperty('name', 'MyErrorB');
-  expect(errB.stack?.startsWith('MyErrorB')).toBe(true);
+  expect(err).toBeInstanceOf(CustomError);
 });
 
 test('Debug', async () => {

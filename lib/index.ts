@@ -109,12 +109,6 @@ export class CustomError extends Error {
   constructor(message: string, previous?: Error) {
     super(message);
 
-    Object.defineProperty(this, 'name', {
-      value: new.target.name,
-      enumerable: false,
-      configurable: true, // so we can setName later
-    });
-
     this.previous = previous;
 
     // FF doesnt have captureStackTrace
@@ -139,12 +133,6 @@ export class CustomError extends Error {
     }
 
     return this.debugData;
-  }
-
-  protected setName(name: string): void {
-    Object.defineProperty(this, 'name', {
-      value: name,
-    });
   }
 
   public get httpStatusCode() {
