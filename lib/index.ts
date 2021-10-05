@@ -216,16 +216,23 @@ export class CustomError extends Error {
   > & {
     debug?: DebugData;
   } {
+    const debug = this.debug();
+
     return withNullProto({
+      name: this.name,
+      message: this.message,
       code: this.code,
       status: this.status,
       httpStatusCode: this.httpStatusCode,
-      details: this.details,
-      cause: this.cause instanceof Error ? this.cause.message : '',
-      message: this.message,
-      name: this.name,
-      stack: this.stack,
-      debug: this.debug(),
+      ...(this.details && { details: this.details }),
+      ...(this.cause instanceof Error && {
+        cause:
+          this.cause instanceof CustomError
+            ? this.cause.toJSON()
+            : this.cause.message,
+      }),
+      ...(this.stack && { stack: this.stack }),
+      ...(debug && { debug }),
     });
   }
 
