@@ -93,7 +93,7 @@ export interface CustomErrorSerialized {
 }
 
 export class CustomError extends Error {
-  public readonly previous?: Error | CustomError;
+  public readonly cause?: Error | CustomError;
 
   public details?: ErrorDetail[];
 
@@ -104,12 +104,12 @@ export class CustomError extends Error {
   /**
    *
    * @param {string} message Developer facing message, in English.
-   * @param {Error} previous
+   * @param {Error} cause
    */
-  constructor(message: string, previous?: Error) {
-    super(message);
+  constructor(message: string, cause?: Error) {
+    super(message /*, { cause }*/);
 
-    this.previous = previous;
+    this.cause = cause;
 
     // FF doesnt have captureStackTrace
     if (Error.captureStackTrace) {

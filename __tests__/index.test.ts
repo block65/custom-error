@@ -183,7 +183,7 @@ test('Multis', async () => {
 test('Previous errors', async () => {
   const err = new CustomError('Test');
   const err2 = new CustomError('Test', err).debug(err.debug());
-  expect(err2.previous).toBe(err);
+  expect(err2.cause).toBe(err);
 });
 
 test('serialize/unserialize', async () => {
