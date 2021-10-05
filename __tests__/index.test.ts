@@ -40,7 +40,7 @@ test('Debug passing', async () => {
   expect(err2.status).toStrictEqual('UNKNOWN');
 });
 
-test('toJSON', async () => {
+test('serialize', async () => {
   const err = new CustomError('Test');
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
@@ -50,7 +50,7 @@ test('toJSON', async () => {
   `);
 });
 
-test('toJSON ErrorInfo', async () => {
+test('serialize ErrorInfo', async () => {
   const err = new CustomError('Test').addDetail({
     reason: 'bad-stuff-happened',
     metadata: {
@@ -73,7 +73,7 @@ test('toJSON ErrorInfo', async () => {
   `);
 });
 
-test('toJSON RetryInfo', async () => {
+test('serialize RetryInfo', async () => {
   const err = new CustomError('Test').addDetail({
     delay: 1000,
   });
@@ -90,7 +90,7 @@ test('toJSON RetryInfo', async () => {
   `);
 });
 
-test('toJSON QuotaFailure', async () => {
+test('serialize QuotaFailure', async () => {
   const err = new CustomError('Test').addDetail({
     violations: [
       { subject: 'account:12345', description: 'Too many sites oreddi' },
@@ -114,7 +114,7 @@ test('toJSON QuotaFailure', async () => {
   `);
 });
 
-test('toJSON BadRequest', async () => {
+test('serialize BadRequest', async () => {
   class RestApiValidationError extends CustomError {
     constructor(message: string, previous?: Error) {
       super(message, previous);
@@ -145,7 +145,7 @@ test('toJSON BadRequest', async () => {
   `);
 });
 
-test('Multis', async () => {
+test('serialize Multis', async () => {
   class QuotaExceededError extends CustomError {
     constructor(message: string, previous?: Error) {
       super(message, previous);
