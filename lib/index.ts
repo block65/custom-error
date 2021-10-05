@@ -93,20 +93,38 @@ export interface CustomErrorSerialized {
 }
 
 export class CustomError extends Error {
-  public readonly cause?: Error | CustomError;
+  /**
+   * The previous error that occurred, useful if "wrapping" an error to hide
+   * sensitive details
+   * @type {Error | CustomError | unknown}
+   */
+  public readonly cause?: Error | CustomError | unknown;
 
+  /**
+   * Further error details suitable for end user consumption
+   * @type {ErrorDetail[]}
+   */
   public details?: ErrorDetail[];
 
+  /**
+   * Status code suitable to coarsely determine the reason for error
+   * @type {Status}
+   */
   public code = Status.UNKNOWN;
 
+  /**
+   * Contains arbitrary debug data for developer troubleshooting
+   * @type {DebugData}
+   * @private
+   */
   private debugData?: DebugData;
 
   /**
    *
    * @param {string} message Developer facing message, in English.
-   * @param {Error} cause
+   * @param {Error | CustomError | unknown} cause
    */
-  constructor(message: string, cause?: Error) {
+  constructor(message: string, cause?: Error | CustomError | unknown) {
     super(message /*, { cause }*/);
 
     this.cause = cause;
@@ -119,6 +137,10 @@ export class CustomError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
+  /**
+   * Add arbitrary debug data to the error object for developer troubleshooting
+   * @return {DebugData | undefined}
+   */
   public debug(): DebugData | undefined;
 
   public debug(data: DebugData | undefined): this;
@@ -135,19 +157,36 @@ export class CustomError extends Error {
     return this.debugData;
   }
 
+  /**
+   * An automatically determined HTTP status code
+   * @return {number}
+   */
   public get httpStatusCode() {
     return defaultHttpMapping.get(this.code) || 500;
   }
 
+  /**
+   * Human readable representation of the error code
+   * @return {keyof typeof Status}
+   */
   public get status(): keyof typeof Status {
     return Status[this.code] as keyof typeof Status;
   }
 
+  /**
+   * Adds further error details suitable for end user consumption
+   * @param {ErrorDetail} details
+   * @return {this}
+   */
   public addDetail(...details: ErrorDetail[]): this {
     this.details = (this.details || []).concat(details);
     return this;
   }
 
+  /**
+   * A "safe" serialised version of the error designed for end user consumption
+   * @return {CustomErrorSerialized}
+   */
   public serialize(): CustomErrorSerialized {
     const localised = this.details?.find(
       (detail): detail is LocalisedMessage => 'locale' in detail,
@@ -160,6 +199,11 @@ export class CustomError extends Error {
     };
   }
 
+  /**
+   * "Hydrates" a previously serialised error object
+   * @param {CustomErrorSerialized} params
+   * @return {CustomError}
+   */
   public static fromJSON(params: CustomErrorSerialized): CustomError {
     return Object.assign(
       new CustomError(params.message || 'Error').addDetail(

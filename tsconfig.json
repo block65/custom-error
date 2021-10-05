@@ -8,8 +8,7 @@
     "outDir": "./dist",
     "lib": [
       "es2021"
-    ],
-    "removeComments": true
+    ]
   },
   "include": [
     "./lib"
