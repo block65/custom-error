@@ -92,6 +92,10 @@ export interface CustomErrorSerialized {
   details?: ErrorDetail[];
 }
 
+function withNullProto<T extends Record<string | number, unknown>>(obj: T): T {
+  return Object.assign(Object.create(null), obj);
+}
+
 export class CustomError extends Error {
   /**
    * The previous error that occurred, useful if "wrapping" an error to hide
@@ -147,10 +151,10 @@ export class CustomError extends Error {
 
   public debug(data?: DebugData | undefined): this | (DebugData | undefined) {
     if (arguments.length > 0) {
-      this.debugData = {
+      this.debugData = withNullProto({
         ...this.debugData,
         ...data,
-      };
+      });
       return this;
     }
 
@@ -191,12 +195,12 @@ export class CustomError extends Error {
     const localised = this.details?.find(
       (detail): detail is LocalisedMessage => 'locale' in detail,
     );
-    return {
+    return withNullProto({
       ...(localised?.message && { message: localised?.message }),
       code: this.code,
       status: this.status,
       ...(this.details && { details: this.details }),
-    };
+    });
   }
 
   /**
@@ -212,7 +216,7 @@ export class CustomError extends Error {
   > & {
     debug?: DebugData;
   } {
-    return {
+    return withNullProto({
       code: this.code,
       status: this.status,
       httpStatusCode: this.httpStatusCode,
@@ -222,7 +226,7 @@ export class CustomError extends Error {
       name: this.name,
       stack: this.stack,
       debug: this.debug(),
-    };
+    });
   }
 
   /**

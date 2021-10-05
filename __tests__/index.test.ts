@@ -26,7 +26,7 @@ test('Debug', async () => {
   };
 
   const err = new CustomError('Test').debug(debugData);
-  expect(err.debug()).toStrictEqual(debugData);
+  expect(err.debug()).toEqual(debugData);
 });
 
 test('Default Status Code', async () => {
