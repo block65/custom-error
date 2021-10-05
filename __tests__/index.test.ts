@@ -209,3 +209,39 @@ test('serialize/unserialize', async () => {
   `);
   expect(clone.serialize()).toMatchObject(err.serialize());
 });
+
+test('toJSON', async () => {
+  const err = new CustomError('Test', new Error('bad stuff'))
+    .addDetail({
+      locale: 'en',
+      message: 'woo yeah',
+    })
+    .debug({ hahaha: 'yes!' });
+  const json = err.toJSON();
+
+  expect(json).toMatchInlineSnapshot(
+    {
+      stack: expect.any(String),
+    },
+    `
+    Object {
+      "cause": "bad stuff",
+      "code": 2,
+      "debug": Object {
+        "hahaha": "yes!",
+      },
+      "details": Array [
+        Object {
+          "locale": "en",
+          "message": "woo yeah",
+        },
+      ],
+      "httpStatusCode": 500,
+      "message": "Test",
+      "name": "Error",
+      "stack": Any<String>,
+      "status": "UNKNOWN",
+    }
+  `,
+  );
+});

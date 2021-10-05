@@ -200,6 +200,32 @@ export class CustomError extends Error {
   }
 
   /**
+   * JSON representation of the error object.
+   *
+   * Use {serialize} instead if you need to send this error over the wire
+   *
+   * @return {object}
+   */
+  public toJSON(): Omit<
+    CustomError,
+    'addDetail' | 'serialize' | 'debug' | 'toJSON'
+  > & {
+    debug?: DebugData;
+  } {
+    return {
+      code: this.code,
+      status: this.status,
+      httpStatusCode: this.httpStatusCode,
+      details: this.details,
+      cause: this.cause instanceof Error ? this.cause.message : '',
+      message: this.message,
+      name: this.name,
+      stack: this.stack,
+      debug: this.debug(),
+    };
+  }
+
+  /**
    * "Hydrates" a previously serialised error object
    * @param {CustomErrorSerialized} params
    * @return {CustomError}
