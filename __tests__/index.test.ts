@@ -241,7 +241,6 @@ test('toJSON', async () => {
           "message": "woo yeah",
         },
       ],
-      "httpStatusCode": 500,
       "message": "Test",
       "name": "Error",
       "stack": Any<String>,

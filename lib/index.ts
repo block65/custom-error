@@ -215,7 +215,7 @@ export class CustomError extends Error {
    */
   public toJSON(): Omit<
     CustomError,
-    'addDetail' | 'serialize' | 'debug' | 'toJSON'
+    'addDetail' | 'serialize' | 'debug' | 'toJSON' | 'httpStatusCode'
   > & {
     debug?: DebugData;
   } {
@@ -226,7 +226,6 @@ export class CustomError extends Error {
       message: this.message,
       code: this.code,
       status: this.status,
-      httpStatusCode: this.httpStatusCode,
       ...(this.details && { details: this.details }),
       ...(this.cause instanceof Error && {
         cause:
