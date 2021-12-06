@@ -45,6 +45,7 @@ test('serialize', async () => {
   expect(err.serialize()).toMatchInlineSnapshot(`
     Object {
       "code": 2,
+      "message": "Test",
       "status": "UNKNOWN",
     }
   `);
@@ -68,6 +69,7 @@ test('serialize ErrorInfo', async () => {
           "reason": "bad-stuff-happened",
         },
       ],
+      "message": "Test",
       "status": "UNKNOWN",
     }
   `);
@@ -85,6 +87,7 @@ test('serialize RetryInfo', async () => {
           "delay": 1000,
         },
       ],
+      "message": "Test",
       "status": "UNKNOWN",
     }
   `);
@@ -109,6 +112,7 @@ test('serialize QuotaFailure', async () => {
           ],
         },
       ],
+      "message": "Test",
       "status": "UNKNOWN",
     }
   `);
@@ -140,6 +144,7 @@ test('serialize BadRequest', async () => {
           ],
         },
       ],
+      "message": "Test",
       "status": "INVALID_ARGUMENT",
     }
   `);

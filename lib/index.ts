@@ -196,7 +196,10 @@ export class CustomError extends Error {
       (detail): detail is LocalisedMessage => 'locale' in detail,
     );
     return withNullProto({
-      ...(localised?.message && { message: localised?.message }),
+      message: this.message,
+      ...(localised?.message && {
+        message: localised.message,
+      }),
       code: this.code,
       status: this.status,
       ...(this.details && { details: this.details }),
