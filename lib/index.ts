@@ -129,7 +129,7 @@ export class CustomError extends Error {
    * @param {Error | CustomError | unknown} cause
    */
   constructor(message: string, cause?: Error | CustomError | unknown) {
-    super(message /*, { cause }*/);
+    super(message /* , { cause } */);
 
     this.cause = cause;
 

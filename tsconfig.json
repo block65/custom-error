@@ -6,14 +6,8 @@
     "module": "esnext",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "lib": [
-      "es2021"
-    ]
+    "lib": ["es2021"]
   },
-  "include": [
-    "./lib"
-  ],
-  "exclude": [
-    "./dist"
-  ]
+  "include": ["./lib"],
+  "exclude": ["./dist"]
 }
