@@ -20,6 +20,8 @@ export enum Status {
   UNAUTHENTICATED,
 }
 
+const CUSTOM_ERROR_SYM = Symbol.for('CustomError');
+
 const defaultHttpMapping: Map<Status, number> = new Map([
   [Status.OK, 200],
   [Status.INVALID_ARGUMENT, 400],
@@ -141,6 +143,10 @@ export class CustomError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
+  public static isCustomError(value: unknown): value is CustomError {
+    return !!value && typeof value === 'object' && CUSTOM_ERROR_SYM in value;
+  }
+
   /**
    * Add arbitrary debug data to the error object for developer troubleshooting
    * @return {DebugData | undefined}
@@ -254,3 +260,10 @@ export class CustomError extends Error {
     );
   }
 }
+
+// Mark all instances of 'CustomError'
+Object.defineProperty(CustomError.prototype, CUSTOM_ERROR_SYM, {
+  value: true,
+  enumerable: false,
+  writable: false,
+});

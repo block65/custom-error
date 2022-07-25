@@ -249,3 +249,35 @@ test('toJSON', async () => {
   `,
   );
 });
+
+test('isCustomError', () => {
+  const err1 = new CustomError('isCustomError');
+
+  expect(CustomError.isCustomError(err1)).toBe(true);
+
+  class ExtendedCustomError extends CustomError {
+    public someRandomValue = 'woo';
+  }
+
+  const extendedErr = new ExtendedCustomError('isCustomError');
+
+  // this works because they are both custom errors, regardless of the class
+  expect(CustomError.isCustomError(extendedErr)).toBe(true);
+  expect(ExtendedCustomError.isCustomError(extendedErr)).toBe(true);
+
+  // this also seems weird, but it's also correct
+  expect(ExtendedCustomError.isCustomError(err1)).toBe(true);
+
+  if (ExtendedCustomError.isCustomError(extendedErr)) {
+    // this maintains the correct type as inheriting from CustomError
+    expect(extendedErr.someRandomValue).toBeTruthy();
+  }
+
+  if (ExtendedCustomError.isCustomError(err1)) {
+    // @ts-expect-error -> expected because its a check for a custom error,
+    // event if we are using the static method from an extended class
+    expect(err1.someRandomValue).toBeFalsy();
+  }
+
+  expect(CustomError.isCustomError(new Error())).toBeFalsy();
+});
