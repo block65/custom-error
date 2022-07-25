@@ -93,7 +93,7 @@ export interface CustomErrorSerialized {
 }
 
 function withNullProto<T extends Record<string | number, unknown>>(obj: T): T {
-  return Object.assign(Object.create(null), obj);
+  return Object.assign(Object.create(null), obj) as T;
 }
 
 export class CustomError extends Error {

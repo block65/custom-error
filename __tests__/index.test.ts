@@ -226,7 +226,7 @@ test('toJSON', async () => {
 
   expect(json).toMatchInlineSnapshot(
     {
-      stack: expect.any(String),
+      stack: expect.any(String) as string,
     },
     `
     Object {
