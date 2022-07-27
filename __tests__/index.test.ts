@@ -230,7 +230,10 @@ test('toJSON', async () => {
     },
     `
     Object {
-      "cause": "bad stuff",
+      "cause": Object {
+        "message": "bad stuff",
+        "name": "Error",
+      },
       "code": 2,
       "debug": Object {
         "hahaha": "yes!",

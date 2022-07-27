@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AssertionError 1`] = `
+Object {
+  "code": "ERR_ASSERTION",
+  "debug": Object {
+    "actual": false,
+    "expected": true,
+    "generatedMessage": false,
+    "operator": "==",
+  },
+  "message": "asserting false",
+  "name": "AssertionError",
+  "stack": Any<String>,
+}
+`;
+
+exports[`CustomError 1`] = `
+Object {
+  "cause": ArrayContaining [
+    ObjectContaining {
+      "stack": Any<String>,
+    },
+  ],
+  "code": 2,
+  "debug": Object {
+    "woo2": "woo2",
+  },
+  "message": "current",
+  "name": "Error",
+  "stack": Any<String>,
+  "status": "UNKNOWN",
+}
+`;
+
+exports[`URLError 1`] = `
+Object {
+  "code": "ERR_INVALID_URL",
+  "debug": Object {
+    "input": "lol",
+  },
+  "message": "Invalid URL",
+  "name": "TypeError",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives 1`] = `
+Object {
+  "debug": Object {
+    "err": 0,
+    "typeofErr": "number",
+  },
+  "message": "0",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives 2`] = `
+Object {
+  "debug": Object {
+    "err": "string",
+    "typeofErr": "string",
+  },
+  "message": "string",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives 3`] = `
+Object {
+  "debug": Object {
+    "err": 0n,
+    "typeofErr": "bigint",
+  },
+  "message": "0",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives 4`] = `
+Object {
+  "debug": Object {
+    "err": false,
+    "typeofErr": "boolean",
+  },
+  "message": "false",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives 5`] = `
+Object {
+  "debug": Object {
+    "err": Symbol(kaboom),
+    "typeofErr": "symbol",
+  },
+  "message": "Symbol(kaboom)",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on voids 1`] = `
+Object {
+  "debug": Object {
+    "err": null,
+    "typeofErr": "object",
+  },
+  "message": "null",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on voids 2`] = `
+Object {
+  "debug": Object {
+    "err": undefined,
+    "typeofErr": "undefined",
+  },
+  "message": "undefined",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;

@@ -2,12 +2,14 @@
   "compilerOptions": {
     "strict": true,
     "declaration": true,
-    "target": "es2021",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "node16",
+    "rootDir": ".",
+    "esModuleInterop": true,
     "outDir": "./dist",
-    "lib": ["es2021"]
+    "lib": ["es2022"]
   },
-  "include": ["./lib"],
+  "include": ["./lib", "__tests__"],
   "exclude": ["./dist"]
 }

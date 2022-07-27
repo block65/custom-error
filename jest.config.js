@@ -4,4 +4,5 @@ export default {
   moduleNameMapper: {
     '^(\\..*)\\.jsx?$': '$1',
   },
+  extensionsToTreatAsEsm: ['.ts'],
 };
