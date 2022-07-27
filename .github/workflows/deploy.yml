@@ -1,9 +1,9 @@
-name: Publish
+name: Deploy
 
 on:
-  push:
-    tags:
-      - v*.*.*
+  workflow_dispatch: {}
+  release:
+    types: [published]
 
 jobs:
   publish-npm:
@@ -12,10 +12,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
           registry-url: https://registry.npmjs.org/
-      - run: yarn install --immutable
-      - run: yarn test
+      - run: make
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
