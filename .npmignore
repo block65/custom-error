@@ -1,6 +1,0 @@
-*
-!dist/cjs.js
-!dist/es.js
-!dist/*.d.ts
-
-
