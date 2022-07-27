@@ -1,6 +1,6 @@
 import { isNativeError } from 'node:util/types';
-import { CustomError } from '@block65/custom-error';
 import { serializeError as serialize } from 'serialize-error';
+import { CustomError } from './custom-error.js';
 
 export interface SerializedError {
   name: string;

@@ -1,8 +1,7 @@
 import assert from 'node:assert';
-import { CustomError } from '@block65/custom-error';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { test } from '@jest/globals';
-import { SerializedError, serializeError } from '../lib/serialize.js';
+import { CustomError, SerializedError, serializeError } from '../lib/index.js';
 
 function throwUrlError() {
   return new URL('/', 'lol');
