@@ -2,15 +2,12 @@
 
 exports[`AssertionError 1`] = `
 Object {
-  "code": "ERR_ASSERTION",
   "debug": Object {
-    "actual": false,
-    "expected": true,
-    "generatedMessage": false,
-    "operator": "==",
+    "err": [AssertionError: asserting false],
+    "typeofErr": "object",
   },
-  "message": "asserting false",
-  "name": "AssertionError",
+  "message": "AssertionError [ERR_ASSERTION]: asserting false",
+  "name": "Error",
   "stack": Any<String>,
 }
 `;
@@ -35,12 +32,12 @@ Object {
 
 exports[`URLError 1`] = `
 Object {
-  "code": "ERR_INVALID_URL",
   "debug": Object {
-    "input": "lol",
+    "err": [TypeError: Invalid URL],
+    "typeofErr": "object",
   },
-  "message": "Invalid URL",
-  "name": "TypeError",
+  "message": "TypeError [ERR_INVALID_URL]: Invalid URL",
+  "name": "Error",
   "stack": Any<String>,
 }
 `;

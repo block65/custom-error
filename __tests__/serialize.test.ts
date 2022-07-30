@@ -34,6 +34,9 @@ test('AssertionError', async () => {
     serializeError,
   );
 
+  // WARN: this is serialized as a unrecognisable Error, due to Jest not
+  // recognising the error as being instanceof Error
+  // we cannot use isNativeError to check as it would no longer be isomorphic
   expect(serialized).toMatchSnapshot({
     stack: expect.any(String) as string,
   });
@@ -42,6 +45,9 @@ test('AssertionError', async () => {
 test('URLError', async () => {
   const serialized = await new Promise(throwUrlError).catch(serializeError);
 
+  // WARN: this is serialized as a unrecognisable Error, due to Jest not
+  // recognising the error as being instanceof Error
+  // we cannot use isNativeError to check as it would no longer be isomorphic
   expect(serialized).toMatchSnapshot({
     stack: expect.any(String) as string,
   });
