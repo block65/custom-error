@@ -104,7 +104,7 @@ export class CustomError extends Error {
    * sensitive details
    * @type {Error | CustomError | unknown}
    */
-  public readonly cause?: Error | CustomError; // can technically also be unknown, but would then conflict with other libs
+  public readonly cause?: Error | CustomError | unknown;
 
   /**
    * Further error details suitable for end user consumption
@@ -116,7 +116,7 @@ export class CustomError extends Error {
    * Status code suitable to coarsely determine the reason for error
    * @type {Status}
    */
-  public code = Status.UNKNOWN;
+  public code: Status = Status.UNKNOWN;
 
   /**
    * Contains arbitrary debug data for developer troubleshooting
@@ -168,14 +168,6 @@ export class CustomError extends Error {
   }
 
   /**
-   * An automatically determined HTTP status code
-   * @return {number}
-   */
-  public get httpStatusCode() {
-    return defaultHttpMapping.get(this.code) || 500;
-  }
-
-  /**
    * Human readable representation of the error code
    * @return {keyof typeof Status}
    */
@@ -221,7 +213,7 @@ export class CustomError extends Error {
    */
   public toJSON(): Omit<
     CustomError,
-    'addDetail' | 'serialize' | 'debug' | 'toJSON' | 'httpStatusCode'
+    'addDetail' | 'serialize' | 'debug' | 'toJSON'
   > & {
     debug?: DebugData;
   } {
@@ -260,6 +252,17 @@ export class CustomError extends Error {
         code: params.code || Status.UNKNOWN,
       },
     );
+  }
+
+  /**
+   * An automatically determined HTTP status code
+   * @return {number}
+   */
+  public static suggestHttpResponseCode(
+    err: Error | CustomError | unknown,
+  ): number {
+    const code = CustomError.isCustomError(err) ? err.code : Status.UNKNOWN;
+    return defaultHttpMapping.get(code) || 500;
   }
 }
 
