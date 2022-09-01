@@ -43,7 +43,7 @@ test('Debug passing', async () => {
 test('serialize', async () => {
   const err = new CustomError('Test');
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 2,
       "message": "Test",
       "status": "UNKNOWN",
@@ -59,11 +59,11 @@ test('serialize ErrorInfo', async () => {
     },
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 2,
-      "details": Array [
-        Object {
-          "metadata": Object {
+      "details": [
+        {
+          "metadata": {
             "ka": "boom",
           },
           "reason": "bad-stuff-happened",
@@ -80,10 +80,10 @@ test('serialize RetryInfo', async () => {
     delay: 1000,
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 2,
-      "details": Array [
-        Object {
+      "details": [
+        {
           "delay": 1000,
         },
       ],
@@ -100,12 +100,12 @@ test('serialize QuotaFailure', async () => {
     ],
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 2,
-      "details": Array [
-        Object {
-          "violations": Array [
-            Object {
+      "details": [
+        {
+          "violations": [
+            {
               "description": "Too many sites oreddi",
               "subject": "account:12345",
             },
@@ -132,12 +132,12 @@ test('serialize BadRequest', async () => {
     ],
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 3,
-      "details": Array [
-        Object {
-          "violations": Array [
-            Object {
+      "details": [
+        {
+          "violations": [
+            {
               "description": "must be longer than 2 characters",
               "field": "site.name",
             },
@@ -167,14 +167,14 @@ test('serialize Multis', async () => {
     message: 'You ran out of stuff',
   });
   expect(err.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 8,
-      "details": Array [
-        Object {
+      "details": [
+        {
           "description": "Some website",
           "url": "https://www.example.com",
         },
-        Object {
+        {
           "locale": "en",
           "message": "You ran out of stuff",
         },
@@ -200,10 +200,10 @@ test('serialize/unserialize', async () => {
   const clone = CustomError.fromJSON(serialized);
 
   expect(clone.serialize()).toMatchInlineSnapshot(`
-    Object {
+    {
       "code": 2,
-      "details": Array [
-        Object {
+      "details": [
+        {
           "locale": "en",
           "message": "woo yeah",
         },
@@ -229,17 +229,17 @@ test('toJSON', async () => {
       stack: expect.any(String) as string,
     },
     `
-    Object {
-      "cause": Object {
+    {
+      "cause": {
         "message": "bad stuff",
         "name": "Error",
       },
       "code": 2,
-      "debug": Object {
+      "debug": {
         "hahaha": "yes!",
       },
-      "details": Array [
-        Object {
+      "details": [
+        {
           "locale": "en",
           "message": "woo yeah",
         },
