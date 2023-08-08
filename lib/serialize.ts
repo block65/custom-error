@@ -42,7 +42,6 @@ export function serializeError(
     };
   }
 
-  // isNativeError for compat inside jest
   if (err instanceof Error) {
     const { name, message, stack, cause, code, ...debug } = serialize(err);
 
