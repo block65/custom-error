@@ -11,6 +11,6 @@
     "outDir": "./dist",
     "lib": ["es2022"]
   },
-  "include": ["./lib", "__tests__"],
+  "include": ["./lib"],
   "exclude": ["./dist"]
 }
