@@ -15,7 +15,7 @@
     "dist/lib/*.d.ts"
   ],
   "scripts": {
-    "prepare": "make clean && make test && make"
+    "preversion": "make clean && make test && make"
   },
   "dependencies": {
     "serialize-error": "^11.0.1"
