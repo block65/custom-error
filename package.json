@@ -15,10 +15,7 @@
     "dist/lib/*.d.ts"
   ],
   "scripts": {
-    "build": "tsc",
-    "build:clean": "rimraf dist/**",
-    "prepare": "yarn build:clean && yarn test && yarn build",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "prepare": "make clean && make test && make"
   },
   "dependencies": {
     "serialize-error": "^11.0.0"

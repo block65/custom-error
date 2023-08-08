@@ -9,18 +9,18 @@ distclean:
 
 .PHONY: clean
 clean:
-	yarn tsc -b --clean
+	pnpm exec tsc -b --clean
 
 .PHONY: test
 test:
-	NODE_OPTIONS=--experimental-vm-modules yarn jest
+	NODE_OPTIONS=--experimental-vm-modules pnpm exec jest
 
 node_modules: package.json
-	yarn install
+	pnpm install
 
 dist: node_modules tsconfig.json $(SRCS)
-	yarn tsc
+	pnpm exec tsc
 
 .PHONY: dev
 dev:
-	yarn tsc -w
+	pnpm exec tsc -w
