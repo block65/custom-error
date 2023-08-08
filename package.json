@@ -18,7 +18,7 @@
     "prepare": "make clean && make test && make"
   },
   "dependencies": {
-    "serialize-error": "^11.0.0"
+    "serialize-error": "^11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
