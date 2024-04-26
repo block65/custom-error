@@ -36,7 +36,7 @@ exports[`URLError 1`] = `
     "err": [TypeError: Invalid URL],
     "typeofErr": "object",
   },
-  "message": "TypeError [ERR_INVALID_URL]: Invalid URL",
+  "message": "TypeError: Invalid URL",
   "name": "Error",
   "stack": Any<String>,
 }
