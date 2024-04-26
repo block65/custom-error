@@ -244,14 +244,17 @@ export class CustomError extends Error {
    * @return {CustomError}
    */
   public static fromJSON(params: CustomErrorSerialized): CustomError {
-    return Object.assign(
-      new CustomError(params.message || 'Error').addDetail(
-        ...(params.details || []),
-      ),
-      {
-        code: params.code || Status.UNKNOWN,
-      },
-    );
+
+    const {code = Status.UNKNOWN, message, details = [], ...rest} = params;
+
+    const err = new CustomError(message || (Status[params.code] || params.code || 'Error').toString()).debug({params})
+    err.code = code;
+
+    if (details) {
+      err.addDetail(...details)
+    }
+
+    return err;
   }
 
   /**
