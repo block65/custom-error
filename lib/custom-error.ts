@@ -275,3 +275,8 @@ Object.defineProperty(CustomError.prototype, CUSTOM_ERROR_SYM, {
   enumerable: false,
   writable: false,
 });
+
+// allow enumeration of status getter
+Object.defineProperty(CustomError.prototype, 'status', {
+  enumerable: true,
+});
