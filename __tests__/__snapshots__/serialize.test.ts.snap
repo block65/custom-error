@@ -12,11 +12,18 @@ exports[`AssertionError 1`] = `
 }
 `;
 
-exports[`CustomError 1`] = `
+exports[`CustomError with CustomError cause 1`] = `
 {
-  "cause": ArrayContaining [
-    ObjectContaining {
+  "cause": [
+    {
+      "code": 2,
+      "debug": {
+        "woo1": "woo1",
+      },
+      "message": "previous",
+      "name": "Error",
       "stack": Any<String>,
+      "status": "UNKNOWN",
     },
   ],
   "code": 2,

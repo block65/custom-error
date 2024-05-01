@@ -52,7 +52,7 @@ test('URLError', async () => {
   });
 });
 
-test('CustomError', () => {
+test('CustomError with CustomError cause', () => {
   const previousErr = new CustomError('previous').debug({ woo1: 'woo1' });
   const current = new CustomError('current', previousErr).debug({
     woo2: 'woo2',
@@ -63,11 +63,11 @@ test('CustomError', () => {
   const result = serializeError(current);
 
   expect(result).toMatchSnapshot({
-    cause: expect.arrayContaining<Partial<SerializedError>>([
-      expect.objectContaining<Partial<SerializedError>>({
-        stack: expect.any(String) as string,
-      }) as Partial<SerializedError>,
-    ]) as Partial<SerializedError>[],
-    stack: expect.any(String) as string,
+    cause: [
+      {
+        stack: expect.any(String),
+      },
+    ],
+    stack: expect.any(String),
   });
 });
