@@ -226,12 +226,13 @@ export class CustomError extends Error {
       status: this.status,
       ...(this.details && { details: this.details }),
       ...(this.cause instanceof Error && {
-        cause: CustomError.isCustomError(this.cause)
-          ? this.cause.toJSON()
-          : {
-              message: this.cause.message,
-              name: 'Error',
-            },
+        cause:
+          'toJSON' in this.cause && typeof this.cause.toJSON === 'function'
+            ? this.cause.toJSON()
+            : {
+                message: this.cause.message,
+                name: 'Error',
+              },
       }),
       ...(this.stack && { stack: this.stack }),
       ...(debug && { debug }),

@@ -6,7 +6,7 @@ export interface SerializedError {
   message: string;
   statusCode?: number;
   stack?: string;
-  cause?: SerializedError[];
+  cause?: SerializedError[] | unknown;
 
   [key: string]: unknown;
 }
@@ -15,13 +15,13 @@ function flattenPreviousErrors(
   err: Error | CustomError | unknown,
   accum: (Error | CustomError)[] = [],
 ): (Error | CustomError)[] {
-  if (CustomError.isCustomError(err)) {
-    const { cause, ...rest } = err;
-    return flattenPreviousErrors(cause, [...accum, rest]);
-  }
   if (err instanceof Error) {
+    if ('cause' in err && err.cause) {
+      return flattenPreviousErrors(err.cause, [...accum, err]);
+    }
     return [...accum, err];
   }
+
   return accum;
 }
 
@@ -30,15 +30,17 @@ export function serializeError(
 ): SerializedError {
   if (CustomError.isCustomError(err)) {
     const previousErrors =
-      'cause' in err && err.cause ? flattenPreviousErrors(err.cause) : [];
+      'cause' in err && err.cause
+        ? flattenPreviousErrors(err.cause)
+        : undefined;
 
     return {
       ...serialize(err),
       message: err.message,
       name: err.name,
       status: err.status,
-      cause: previousErrors.map(serializeError),
-      ...('debug' in err ? { debug: err.debug() } : {}),
+      ...(previousErrors && { cause: previousErrors.map(serializeError) }),
+      ...('debug' in err && { debug: err.debug() }),
     };
   }
 
@@ -46,7 +48,7 @@ export function serializeError(
     const { name, message, stack, cause, code, ...debug } = serialize(err);
 
     return {
-      message: message || '',
+      message: message || 'Error',
       name: name || 'Error',
       code,
       stack,
