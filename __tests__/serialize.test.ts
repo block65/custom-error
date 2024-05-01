@@ -1,7 +1,6 @@
 import assert from 'node:assert';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { test } from '@jest/globals';
-import { CustomError, SerializedError, serializeError } from '../lib/index.js';
+import { CustomError, serializeError } from '../lib/index.js';
 
 function throwUrlError() {
   return new URL('/', 'lol');
@@ -15,7 +14,7 @@ function throwAssertionError() {
   test('dont explode on primitives', () => {
     const result = serializeError(primitive);
     expect(result).toMatchSnapshot({
-      stack: expect.any(String) as string,
+      stack: expect.any(String),
     });
   });
 });
@@ -24,7 +23,7 @@ function throwAssertionError() {
   test('dont explode on voids', () => {
     const result = serializeError(primitive);
     expect(result).toMatchSnapshot({
-      stack: expect.any(String) as string,
+      stack: expect.any(String),
     });
   });
 });
@@ -38,7 +37,7 @@ test('AssertionError', async () => {
   // recognising the error as being instanceof Error
   // we cannot use isNativeError to check as it would no longer be isomorphic
   expect(serialized).toMatchSnapshot({
-    stack: expect.any(String) as string,
+    stack: expect.any(String),
   });
 });
 
@@ -49,7 +48,7 @@ test('URLError', async () => {
   // recognising the error as being instanceof Error
   // we cannot use isNativeError to check as it would no longer be isomorphic
   expect(serialized).toMatchSnapshot({
-    stack: expect.any(String) as string,
+    stack: expect.any(String),
   });
 });
 
