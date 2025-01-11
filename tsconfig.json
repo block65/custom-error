@@ -1,16 +1,9 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "declaration": true,
-    "target": "es2022",
-    "module": "node16",
-    "moduleResolution": "node16",
-    "rootDir": ".",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
-    "lib": ["es2022"]
-  },
-  "include": ["./lib"],
-  "exclude": ["./dist"]
+	"extends": ["@tsconfig/node18", "@tsconfig/strictest"],
+	"compilerOptions": {
+		"noPropertyAccessFromIndexSignature": false,
+		"declaration": true,
+		"outDir": "./dist"
+	},
+	"include": ["./lib", "./test"]
 }

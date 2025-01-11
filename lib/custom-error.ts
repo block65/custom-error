@@ -1,284 +1,312 @@
-type DebugData = Record<string, unknown>;
+import { isErrorLike } from "serialize-error";
+import type { CustomErrorSerialized } from "./serialize.js";
+import type { ErrorDetail, LocalisedMessage } from "./types.js";
+import { withNullProto } from "./utils.js";
 
-export enum Status {
-  OK = 0,
-  CANCELLED,
-  UNKNOWN,
-  INVALID_ARGUMENT,
-  DEADLINE_EXCEEDED,
-  NOT_FOUND,
-  ALREADY_EXISTS,
-  PERMISSION_DENIED,
-  RESOURCE_EXHAUSTED,
-  FAILED_PRECONDITION,
-  ABORTED,
-  OUT_OF_RANGE,
-  UNIMPLEMENTED,
-  INTERNAL,
-  UNAVAILABLE,
-  DATA_LOSS,
-  UNAUTHENTICATED,
+export type DebugData = Record<string, unknown>;
+
+const kCustomError = Symbol.for("CustomError");
+
+enum StatusCode {
+	OK = 0,
+	CANCELLED = 1,
+	UNKNOWN = 2,
+	INVALID_ARGUMENT = 3,
+	DEADLINE_EXCEEDED = 4,
+	NOT_FOUND = 5,
+	ALREADY_EXISTS = 6,
+	PERMISSION_DENIED = 7,
+	RESOURCE_EXHAUSTED = 8,
+	FAILED_PRECONDITION = 9,
+	ABORTED = 10,
+	OUT_OF_RANGE = 11,
+	UNIMPLEMENTED = 12,
+	INTERNAL = 13,
+	UNAVAILABLE = 14,
+	DATA_LOSS = 15,
+	UNAUTHENTICATED = 16,
 }
 
-const CUSTOM_ERROR_SYM = Symbol.for('CustomError');
+// export type StatusObject = {
+// 	[T in StatusCode]: {
+// 		id: T;
+// 		status: keyof typeof StatusCode[T];
+// 	};
+// }[StatusCode]
 
-const defaultHttpMapping: Map<Status, number> = new Map([
-  [Status.OK, 200],
-  [Status.INVALID_ARGUMENT, 400],
-  [Status.FAILED_PRECONDITION, 400],
-  [Status.OUT_OF_RANGE, 400],
-  [Status.UNAUTHENTICATED, 401],
-  [Status.PERMISSION_DENIED, 403],
-  [Status.NOT_FOUND, 404],
-  [Status.ABORTED, 409],
-  [Status.ALREADY_EXISTS, 409],
-  [Status.RESOURCE_EXHAUSTED, 403],
-  [Status.CANCELLED, 499],
-  [Status.DATA_LOSS, 500],
-  [Status.UNKNOWN, 500],
-  [Status.INTERNAL, 500],
-  [Status.UNIMPLEMENTED, 501],
-  // [Code.LOCAL_OUTAGE,  502],
-  [Status.UNAVAILABLE, 503],
-  [Status.DEADLINE_EXCEEDED, 504],
-]);
+export type StatusObject = {
+	[K in keyof StatusCode]: {
+		id: StatusCode[K];
+		status: K;
+	};
+}[keyof StatusCode];
 
-export interface ErrorInfo {
-  reason: string;
-  metadata: Record<string, string>;
-}
+export class CustomError<
+	T extends StatusCode = StatusCode.UNKNOWN,
+> extends Error {
+	static readonly OK = 0;
+	static readonly CANCELLED = 1;
+	static readonly UNKNOWN = 2;
+	static readonly INVALID_ARGUMENT = 3;
+	static readonly DEADLINE_EXCEEDED = 4;
+	static readonly NOT_FOUND = 5;
+	static readonly ALREADY_EXISTS = 6;
+	static readonly PERMISSION_DENIED = 7;
+	static readonly RESOURCE_EXHAUSTED = 8;
+	static readonly FAILED_PRECONDITION = 9;
+	static readonly ABORTED = 10;
+	static readonly OUT_OF_RANGE = 11;
+	static readonly UNIMPLEMENTED = 12;
+	static readonly INTERNAL = 13;
+	static readonly UNAVAILABLE = 14;
+	static readonly DATA_LOSS = 15;
+	static readonly UNAUTHENTICATED = 16;
 
-export interface RetryInfo {
-  delay: number;
-}
+	// readonly codes = new Map([
+	// 	[CustomError.OK, "OK"],
+	// 	[CustomError.CANCELLED, "CANCELLED"],
+	// 	[CustomError.UNKNOWN, "UNKNOWN"],
+	// 	[CustomError.INVALID_ARGUMENT, "INVALID_ARGUMENT"],
+	// 	[CustomError.DEADLINE_EXCEEDED, "DEADLINE_EXCEEDED"],
+	// 	[CustomError.NOT_FOUND, "NOT_FOUND"],
+	// 	[CustomError.ALREADY_EXISTS, "ALREADY_EXISTS"],
+	// 	[CustomError.PERMISSION_DENIED, "PERMISSION_DENIED"],
+	// 	[CustomError.RESOURCE_EXHAUSTED, "RESOURCE_EXHAUSTED"],
+	// 	[CustomError.FAILED_PRECONDITION, "FAILED_PRECONDITION"],
+	// 	[CustomError.ABORTED, "ABORTED"],
+	// 	[CustomError.OUT_OF_RANGE, "OUT_OF_RANGE"],
+	// 	[CustomError.UNIMPLEMENTED, "UNIMPLEMENTED"],
+	// 	[CustomError.INTERNAL, "INTERNAL"],
+	// 	[CustomError.UNAVAILABLE, "UNAVAILABLE"],
+	// 	[CustomError.DATA_LOSS, "DATA_LOSS"],
+	// 	[CustomError.UNAUTHENTICATED, "UNAUTHENTICATED"],
+	// ] as const);
 
-export interface BadRequest {
-  violations: { field: string; description: string }[];
-}
+	readonly codes = Object.freeze({
+		[CustomError.OK]: "OK",
+		[CustomError.CANCELLED]: "CANCELLED",
+		[CustomError.UNKNOWN]: "UNKNOWN",
+		[CustomError.INVALID_ARGUMENT]: "INVALID_ARGUMENT",
+		[CustomError.DEADLINE_EXCEEDED]: "DEADLINE_EXCEEDED",
+		[CustomError.NOT_FOUND]: "NOT_FOUND",
+		[CustomError.ALREADY_EXISTS]: "ALREADY_EXISTS",
+		[CustomError.PERMISSION_DENIED]: "PERMISSION_DENIED",
+		[CustomError.RESOURCE_EXHAUSTED]: "RESOURCE_EXHAUSTED",
+		[CustomError.FAILED_PRECONDITION]: "FAILED_PRECONDITION",
+		[CustomError.ABORTED]: "ABORTED",
+		[CustomError.OUT_OF_RANGE]: "OUT_OF_RANGE",
+		[CustomError.UNIMPLEMENTED]: "UNIMPLEMENTED",
+		[CustomError.INTERNAL]: "INTERNAL",
+		[CustomError.UNAVAILABLE]: "UNAVAILABLE",
+		[CustomError.DATA_LOSS]: "DATA_LOSS",
+		[CustomError.UNAUTHENTICATED]: "UNAUTHENTICATED",
+	});
 
-export interface LocalisedMessage {
-  locale: 'en';
-  message: string;
-}
+	// static http = new Map([
+	// 	[CustomError.OK, 200],
+	// 	[CustomError.CANCELLED, 299],
+	// 	[CustomError.UNKNOWN, 500],
+	// 	[CustomError.INVALID_ARGUMENT, 400],
+	// 	[CustomError.DEADLINE_EXCEEDED, 504],
+	// 	[CustomError.NOT_FOUND, 404],
+	// 	[CustomError.ALREADY_EXISTS, 409],
+	// 	[CustomError.PERMISSION_DENIED, 403],
+	// 	[CustomError.RESOURCE_EXHAUSTED, 403],
+	// 	[CustomError.FAILED_PRECONDITION, 400],
+	// 	[CustomError.ABORTED, 299],
+	// 	[CustomError.OUT_OF_RANGE, 400],
+	// 	[CustomError.UNIMPLEMENTED, 501],
+	// 	[CustomError.INTERNAL, 500],
+	// 	[CustomError.UNAVAILABLE, 503],
+	// 	[CustomError.DATA_LOSS, 500],
+	// 	[CustomError.UNAUTHENTICATED, 401],
+	// ]);
 
-export interface Help {
-  url: string;
-  description: string;
-}
+	static http = Object.freeze({
+		[CustomError.OK]: 200,
+		[CustomError.CANCELLED]: 299,
+		[CustomError.UNKNOWN]: 500,
+		[CustomError.INVALID_ARGUMENT]: 400,
+		[CustomError.DEADLINE_EXCEEDED]: 504,
+		[CustomError.NOT_FOUND]: 404,
+		[CustomError.ALREADY_EXISTS]: 409,
+		[CustomError.PERMISSION_DENIED]: 403,
+		[CustomError.RESOURCE_EXHAUSTED]: 403,
+		[CustomError.FAILED_PRECONDITION]: 400,
+		[CustomError.ABORTED]: 299,
+		[CustomError.OUT_OF_RANGE]: 400,
+		[CustomError.UNIMPLEMENTED]: 501,
+		[CustomError.INTERNAL]: 500,
+		[CustomError.UNAVAILABLE]: 503,
+		[CustomError.DATA_LOSS]: 500,
+		[CustomError.UNAUTHENTICATED]: 401,
+	});
 
-export interface QuotaFailure {
-  violations: {
-    /**
-     * subject of which quota check failed ie: `account:1234567`
-     */
-    subject: string;
-    /**
-     * description of quota failure
-     */
-    description: string;
-  }[];
-}
+	/**
+	 * The previous error that occurred, useful if "wrapping" an error to hide
+	 * sensitive details
+	 * @type {Error | CustomError | unknown}
+	 */
+	public override readonly cause?: Error | CustomError | unknown;
 
-export type ErrorDetail =
-  | ErrorInfo
-  | RetryInfo
-  | QuotaFailure
-  | BadRequest
-  | LocalisedMessage
-  | Help;
+	/**
+	 * Further error details suitable for end user consumption
+	 * @type {ErrorDetail[]}
+	 */
+	public details?: ErrorDetail[];
 
-export interface CustomErrorSerialized {
-  code: Status;
-  status: keyof typeof Status;
-  message?: string;
-  details?: ErrorDetail[];
-}
+	/**
+	 * Status code suitable to coarsely determine the reason for error
+	 */
+	readonly statusCode: T = CustomError.UNKNOWN as T;
 
-function withNullProto<T extends Record<string | number, unknown>>(obj: T): T {
-  return Object.assign(Object.create(null), obj) as T;
-}
+	/**
+	 * @deprecated
+	 * @use {statusCode} or {status}
+	 */
+	readonly code = this.statusCode;
 
-export class CustomError extends Error {
-  /**
-   * The previous error that occurred, useful if "wrapping" an error to hide
-   * sensitive details
-   * @type {Error | CustomError | unknown}
-   */
-  public readonly cause?: Error | CustomError | unknown;
+	get status() {
+		return {
+			id: this.statusCode,
+			status: this.codes[this.statusCode],
+		};
+	}
 
-  /**
-   * Further error details suitable for end user consumption
-   * @type {ErrorDetail[]}
-   */
-  public details?: ErrorDetail[];
+	/**
+	 * Contains arbitrary debug data for developer troubleshooting
+	 * @type {DebugData}
+	 * @private
+	 */
+	#debug?: DebugData;
 
-  /**
-   * Status code suitable to coarsely determine the reason for error
-   * @type {Status}
-   */
-  public code: Status = Status.UNKNOWN;
+	/**
+	 *
+	 * @param {string} message Developer facing message, in English.
+	 * @param {Error | CustomError | unknown} cause
+	 */
+	constructor(message?: string, cause?: Error | CustomError | unknown) {
+		super(message, { cause });
 
-  /**
-   * Contains arbitrary debug data for developer troubleshooting
-   * @type {DebugData}
-   * @private
-   */
-  private debugData?: DebugData;
+		this.cause = cause;
 
-  /**
-   *
-   * @param {string} message Developer facing message, in English.
-   * @param {Error | CustomError | unknown} cause
-   */
-  constructor(message: string, cause?: Error | CustomError | unknown) {
-    super(message, { cause });
+		// FF doesnt have captureStackTrace
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, this.constructor);
+		}
 
-    this.cause = cause;
+		Object.setPrototypeOf(this, new.target.prototype);
+	}
 
-    // FF doesnt have captureStackTrace
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
-    }
+	public static isCustomError(value: unknown): value is CustomError {
+		return !!value && typeof value === "object" && kCustomError in value;
+	}
 
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
+	/**
+	 * Add arbitrary debug data to the error object for developer troubleshooting
+	 */
+	public debug(data: DebugData): this {
+		this.#debug = withNullProto({
+			...this.#debug,
+			...data,
+		});
+		return this;
+	}
 
-  public static isCustomError(value: unknown): value is CustomError {
-    return !!value && typeof value === 'object' && CUSTOM_ERROR_SYM in value;
-  }
+	/**
+	 * Adds further error details suitable for end user consumption
+	 * @param {ErrorDetail} details
+	 * @return {this}
+	 */
+	public addDetail(...details: ErrorDetail[]) {
+		this.details = (this.details || []).concat(details);
+		return this;
+	}
 
-  /**
-   * Add arbitrary debug data to the error object for developer troubleshooting
-   * @return {DebugData | undefined}
-   */
-  public debug(): DebugData | undefined;
+	/**
+	 * A "safe" serialised version of the error designed for end user consumption
+	 */
+	public toJSONSummary() {
+		const localised = this.details?.find(
+			(detail): detail is LocalisedMessage => "locale" in detail,
+		);
 
-  public debug(data: DebugData | undefined): this;
+		return {
+			...(localised?.message && {
+				message: localised.message,
+			}),
+			status: this.status,
+			...(this.details && { details: this.details }),
+		};
+	}
 
-  public debug(data?: DebugData | undefined): this | (DebugData | undefined) {
-    if (arguments.length > 0) {
-      this.debugData = withNullProto({
-        ...this.debugData,
-        ...data,
-      });
-      return this;
-    }
+	/**
+	 * JSON representation of the error object that can be "hydrated" later
+	 */
+	public toJSON() {
+		return withNullProto({
+			name: this.name,
+			message: this.message,
+			status: this.status,
+			...(this.details && { details: this.details }),
+			...(isErrorLike(this.cause) && {
+				cause:
+					"toJSON" in this.cause && typeof this.cause.toJSON === "function"
+						? this.cause.toJSON()
+						: {
+								message: this.cause.message,
+								name: "Error",
+							},
+			}),
+			...(this.stack && { stack: this.stack }),
+			...(this.#debug && { debug: this.#debug }),
+		});
+	}
 
-    return this.debugData;
-  }
+	/**
+	 * "Hydrates" a previously serialised error object
+	 * @param {CustomErrorSerialized} params
+	 */
+	public static fromJSON<S extends StatusCode = StatusCode.UNKNOWN>(
+		params: CustomErrorSerialized<S>,
+	) {
+		const {
+			// status = CustomError.UNKNOWN,
+			message,
+			details = [],
+		} = params;
 
-  /**
-   * Human readable representation of the error code
-   * @return {keyof typeof Status}
-   */
-  public get status(): keyof typeof Status {
-    return Status[this.code] as keyof typeof Status;
-  }
+		const err = new CustomError(message).debug({
+			params,
+		});
 
-  /**
-   * Adds further error details suitable for end user consumption
-   * @param {ErrorDetail} details
-   * @return {this}
-   */
-  public addDetail(...details: ErrorDetail[]): this {
-    this.details = (this.details || []).concat(details);
-    return this;
-  }
+		if (details) {
+			err.addDetail(...details);
+		}
 
-  /**
-   * A "safe" serialised version of the error designed for end user consumption
-   * @return {CustomErrorSerialized}
-   */
-  public serialize(): CustomErrorSerialized {
-    const localised = this.details?.find(
-      (detail): detail is LocalisedMessage => 'locale' in detail,
-    );
-    return withNullProto({
-      message: this.message,
-      ...(localised?.message && {
-        message: localised.message,
-      }),
-      code: this.code,
-      status: this.status,
-      ...(this.details && { details: this.details }),
-    });
-  }
+		return err;
+	}
 
-  /**
-   * JSON representation of the error object.
-   *
-   * Use {serialize} instead if you need to send this error over the wire
-   *
-   * @return {object}
-   */
-  public toJSON(): Omit<
-    CustomError,
-    'addDetail' | 'serialize' | 'debug' | 'toJSON'
-  > & {
-    debug?: DebugData;
-  } {
-    const debug = this.debug();
-
-    return withNullProto({
-      name: this.name,
-      message: this.message,
-      code: this.code,
-      status: this.status,
-      ...(this.details && { details: this.details }),
-      ...(this.cause instanceof Error && {
-        cause:
-          'toJSON' in this.cause && typeof this.cause.toJSON === 'function'
-            ? this.cause.toJSON()
-            : {
-                message: this.cause.message,
-                name: 'Error',
-              },
-      }),
-      ...(this.stack && { stack: this.stack }),
-      ...(debug && { debug }),
-    });
-  }
-
-  /**
-   * "Hydrates" a previously serialised error object
-   * @param {CustomErrorSerialized} params
-   * @return {CustomError}
-   */
-  public static fromJSON(params: CustomErrorSerialized): CustomError {
-    const { code = Status.UNKNOWN, message, details = []} = params;
-
-    const err = new CustomError(
-      message || (Status[params.code] || params.code || 'Error').toString(),
-    ).debug({ params });
-    err.code = code;
-
-    if (details) {
-      err.addDetail(...details);
-    }
-
-    return err;
-  }
-
-  /**
-   * An automatically determined HTTP status code
-   * @return {number}
-   */
-  public static suggestHttpResponseCode(
-    err: Error | CustomError | unknown,
-  ): number {
-    const code = CustomError.isCustomError(err) ? err.code : Status.UNKNOWN;
-    return defaultHttpMapping.get(code) || 500;
-  }
+	/**
+	 * An automatically determined HTTP status code
+	 * @return {HttpStatusCode}
+	 */
+	public static suggestHttpResponseCode(err: Error | CustomError | unknown) {
+		const code = CustomError.isCustomError(err)
+			? err.status.id
+			: CustomError.UNKNOWN;
+		return CustomError.http[code] || CustomError.http[CustomError.UNKNOWN];
+	}
 }
 
 // Mark all instances of 'CustomError'
-Object.defineProperty(CustomError.prototype, CUSTOM_ERROR_SYM, {
-  value: true,
-  enumerable: false,
-  writable: false,
+Object.defineProperty(CustomError.prototype, kCustomError, {
+	value: true,
+	enumerable: false,
+	writable: false,
 });
 
 // allow enumeration of status getter
-Object.defineProperty(CustomError.prototype, 'status', {
-  enumerable: true,
+Object.defineProperty(CustomError.prototype, "status", {
+	enumerable: true,
 });

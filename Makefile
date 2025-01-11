@@ -13,7 +13,7 @@ clean:
 
 .PHONY: test
 test:
-	NODE_OPTIONS=--experimental-vm-modules pnpm exec jest
+	pnpm exec vitest
 
 node_modules: package.json
 	pnpm install
@@ -24,3 +24,8 @@ dist: node_modules tsconfig.json $(SRCS)
 .PHONY: dev
 dev:
 	pnpm exec tsc -w
+
+
+.PHONY: pretty
+pretty:
+	pnpm exec prettier --write .

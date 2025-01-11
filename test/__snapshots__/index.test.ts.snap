@@ -1,0 +1,140 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`serialize 1`] = `
+{
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
+
+exports[`serialize BadRequest 1`] = `
+{
+  "details": [
+    {
+      "violations": [
+        {
+          "description": "must be longer than 2 characters",
+          "field": "site.name",
+        },
+      ],
+    },
+  ],
+  "status": {
+    "id": 3,
+    "status": "INVALID_ARGUMENT",
+  },
+}
+`;
+
+exports[`serialize ErrorInfo 1`] = `
+{
+  "details": [
+    {
+      "metadata": {
+        "ka": "boom",
+      },
+      "reason": "bad-stuff-happened",
+    },
+  ],
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
+
+exports[`serialize Multis 1`] = `
+{
+  "details": [
+    {
+      "description": "Some website",
+      "url": "https://www.example.com",
+    },
+    {
+      "locale": "en",
+      "message": "You ran out of stuff",
+    },
+  ],
+  "message": "You ran out of stuff",
+  "status": {
+    "id": 8,
+    "status": "RESOURCE_EXHAUSTED",
+  },
+}
+`;
+
+exports[`serialize QuotaFailure 1`] = `
+{
+  "details": [
+    {
+      "violations": [
+        {
+          "description": "Too many sites oreddi",
+          "subject": "account:12345",
+        },
+      ],
+    },
+  ],
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
+
+exports[`serialize RetryInfo 1`] = `
+{
+  "details": [
+    {
+      "delay": 1000,
+    },
+  ],
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
+
+exports[`serialize/unserialize 1`] = `
+{
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "woo yeah",
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
+
+exports[`toJSON 1`] = `
+{
+  "cause": {
+    "message": "bad stuff",
+    "name": "Error",
+  },
+  "debug": {
+    "hahaha": "yes!",
+  },
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "Test",
+  "name": "Error",
+  "stack": Any<String>,
+  "status": {
+    "id": 2,
+    "status": "UNKNOWN",
+  },
+}
+`;
