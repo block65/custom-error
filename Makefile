@@ -8,11 +8,11 @@ distclean:
 	rm -rf node_modules
 
 .PHONY: clean
-clean:
+clean: node_modules
 	pnpm exec tsc -b --clean
 
 .PHONY: test
-test:
+test: node_modules
 	pnpm exec vitest
 
 node_modules: package.json
@@ -22,10 +22,9 @@ dist: node_modules tsconfig.json $(SRCS)
 	pnpm exec tsc
 
 .PHONY: dev
-dev:
+dev: node_modules
 	pnpm exec tsc -w
 
-
 .PHONY: pretty
-pretty:
+pretty: node_modules
 	pnpm exec prettier --write .
