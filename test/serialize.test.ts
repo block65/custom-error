@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { expect, test } from "vitest";
-import { CustomError, serializeError } from "../lib/index.js";
+import { expect, expectTypeOf, test } from "vitest";
+import { CustomError, type StatusCode, serializeError } from "../lib/index.js";
 
 function throwUrlError() {
 	return new URL("/", "lol");
@@ -65,4 +65,21 @@ test("CustomError with CustomError cause", () => {
 		],
 		stack: expect.any(String),
 	});
+});
+
+test("serialize/unserialize", async () => {
+	const err = new CustomError("Test").addDetail({
+		locale: "en",
+		message: "woo yeah",
+	});
+	const serialized = err.toJSON();
+	const clone = CustomError.fromJSON(serialized);
+
+	expectTypeOf(clone.code).toEqualTypeOf<StatusCode>();
+
+	expect(clone.toJSONSummary()).toMatchSnapshot();
+	expect(clone.toJSONSummary()).toMatchObject(err.toJSONSummary());
+
+	expect(clone.toJSON()).toMatchSnapshot();
+	// expect(clone.toJSON()).toMatchObject(err.toJSON());
 });

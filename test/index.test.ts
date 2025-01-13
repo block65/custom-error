@@ -31,10 +31,7 @@ test("Debug", async () => {
 
 test("Default Status Code", async () => {
 	const err = new CustomError("Test");
-	expect(err.status).toStrictEqual({
-		id: CustomError.UNKNOWN,
-		status: "UNKNOWN",
-	});
+	expect(err.code).toStrictEqual(CustomError.UNKNOWN);
 });
 
 test("serialize", async () => {
@@ -70,7 +67,7 @@ test("serialize QuotaFailure", async () => {
 
 test("serialize BadRequest", async () => {
 	class RestApiValidationError extends CustomError {
-		override statusCode = CustomError.INVALID_ARGUMENT;
+		override code = CustomError.INVALID_ARGUMENT;
 	}
 
 	const err = new RestApiValidationError("Test").addDetail({
@@ -83,7 +80,7 @@ test("serialize BadRequest", async () => {
 
 test("serialize Multis", async () => {
 	class QuotaExceededError extends CustomError {
-		override statusCode = CustomError.RESOURCE_EXHAUSTED;
+		override code = CustomError.RESOURCE_EXHAUSTED;
 
 		constructor(message: string, previous?: Error) {
 			super(message, previous);
@@ -107,18 +104,6 @@ test("Previous errors", async () => {
 	expect(err2.cause).toBe(err);
 });
 
-test("serialize/unserialize", async () => {
-	const err = new CustomError("Test").addDetail({
-		locale: "en",
-		message: "woo yeah",
-	});
-	const serialized = err.toJSONSummary();
-	const clone = CustomError.fromJSON(serialized);
-
-	expect(clone.toJSONSummary()).toMatchSnapshot();
-	expect(clone.toJSONSummary()).toMatchObject(err.toJSONSummary());
-});
-
 test("toJSON", async () => {
 	const err = new CustomError("Test", new Error("bad stuff"))
 		.addDetail({
@@ -139,6 +124,7 @@ test("isCustomError", () => {
 	expect(CustomError.isCustomError(err1)).toBe(true);
 
 	class ExtendedCustomError extends CustomError {
+		override code = CustomError.ABORTED;
 		public someRandomValue = "woo";
 	}
 
