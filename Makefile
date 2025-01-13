@@ -28,3 +28,7 @@ dev: node_modules
 .PHONY: pretty
 pretty: node_modules
 	pnpm exec prettier --write .
+
+.PHONY: publint
+publint: dist
+	npx publint --strict
