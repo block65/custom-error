@@ -188,8 +188,8 @@ exports[`serialize/unserialize 2`] = `
     at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
     at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
     at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
-    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
-    at withEnv (file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)",
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+    at withEnv (file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)",
     },
   },
   "details": [
@@ -210,6 +210,6 @@ exports[`serialize/unserialize 2`] = `
     at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
     at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
     at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
-    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11",
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11",
 }
 `;
