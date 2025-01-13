@@ -8,28 +8,28 @@ importers:
 
   .:
     dependencies:
+      serialize-error:
+        specifier: ^12.0.0
+        version: 12.0.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: ^1.9.4
+        version: 1.9.4
       '@tsconfig/node18':
         specifier: ^18.2.4
         version: 18.2.4
       '@tsconfig/strictest':
         specifier: ^2.0.5
         version: 2.0.5
-      serialize-error:
-        specifier: ^12.0.0
-        version: 12.0.0
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.8(@types/node@20.17.12)
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^1.9.4
-        version: 1.9.4
       '@types/node':
         specifier: ^20.17.12
         version: 20.17.12
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.8(@types/node@20.17.12)
 
 packages:
 
