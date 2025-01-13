@@ -1,0 +1,215 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AssertionError 1`] = `
+{
+  "code": "ERR_ASSERTION",
+  "debug": {
+    "actual": false,
+    "expected": true,
+    "generatedMessage": false,
+    "operator": "==",
+  },
+  "message": "asserting false",
+  "name": "AssertionError",
+  "stack": Any<String>,
+}
+`;
+
+exports[`CustomError with CustomError cause 1`] = `
+{
+  "cause": [
+    {
+      "code": 2,
+      "debug": {
+        "debug": {
+          "woo1": "woo1",
+        },
+      },
+      "message": "previous",
+      "name": "Error",
+      "stack": Any<String>,
+    },
+  ],
+  "code": 2,
+  "debug": {
+    "woo2": "woo2",
+  },
+  "message": "current",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
+
+exports[`URLError 1`] = `
+{
+  "code": "ERR_INVALID_URL",
+  "debug": {
+    "base": "lol",
+    "input": "/",
+  },
+  "message": "Invalid URL",
+  "name": "TypeError",
+  "stack": Any<String>,
+}
+`;
+
+exports[`dont explode on primitives: 0 1`] = `
+{
+  "debug": {
+    "err": "0",
+    "typeofErr": "number",
+  },
+  "message": "0",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: 0n 1`] = `
+{
+  "debug": {
+    "err": "0",
+    "typeofErr": "bigint",
+  },
+  "message": "0",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: Symbol(kaboom) 1`] = `
+{
+  "debug": {
+    "err": "Symbol(kaboom)",
+    "typeofErr": "symbol",
+  },
+  "message": "Symbol(kaboom)",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: false 1`] = `
+{
+  "debug": {
+    "err": "false",
+    "typeofErr": "boolean",
+  },
+  "message": "false",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: null 1`] = `
+{
+  "debug": {
+    "err": "null",
+    "typeofErr": "object",
+  },
+  "message": "null",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: string 1`] = `
+{
+  "debug": {
+    "err": "string",
+    "typeofErr": "string",
+  },
+  "message": "string",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on primitives: undefined 1`] = `
+{
+  "debug": {
+    "err": "undefined",
+    "typeofErr": "undefined",
+  },
+  "message": "undefined",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on voids: null 1`] = `
+{
+  "debug": {
+    "err": "null",
+    "typeofErr": "object",
+  },
+  "message": "null",
+  "name": "Error",
+}
+`;
+
+exports[`dont explode on voids: undefined 1`] = `
+{
+  "debug": {
+    "err": "undefined",
+    "typeofErr": "undefined",
+  },
+  "message": "undefined",
+  "name": "Error",
+}
+`;
+
+exports[`serialize/unserialize 1`] = `
+{
+  "code": 2,
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "woo yeah",
+}
+`;
+
+exports[`serialize/unserialize 2`] = `
+{
+  "code": 2,
+  "debug": {
+    "params": {
+      "code": 2,
+      "details": [
+        {
+          "locale": "en",
+          "message": "woo yeah",
+        },
+      ],
+      "message": "Test",
+      "name": "Error",
+      "stack": "Error: Test
+    at .../test/serialize.test.ts:71:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
+    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+    at withEnv (file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)",
+    },
+  },
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "Test",
+  "name": "Error",
+  "stack": "Error: Test
+    at Function.fromJSON (.../lib/custom-error.ts:201:15)
+    at .../test/serialize.test.ts:76:28
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
+    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11",
+}
+`;

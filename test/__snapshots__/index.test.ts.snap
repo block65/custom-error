@@ -1,0 +1,103 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`serialize 1`] = `
+{
+  "code": 2,
+}
+`;
+
+exports[`serialize BadRequest 1`] = `
+{
+  "code": 3,
+  "details": [
+    {
+      "violations": [
+        {
+          "description": "must be longer than 2 characters",
+          "field": "site.name",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`serialize ErrorInfo 1`] = `
+{
+  "code": 2,
+  "details": [
+    {
+      "metadata": {
+        "ka": "boom",
+      },
+      "reason": "bad-stuff-happened",
+    },
+  ],
+}
+`;
+
+exports[`serialize Multis 1`] = `
+{
+  "code": 8,
+  "details": [
+    {
+      "description": "Some website",
+      "url": "https://www.example.com",
+    },
+    {
+      "locale": "en",
+      "message": "You ran out of stuff",
+    },
+  ],
+  "message": "You ran out of stuff",
+}
+`;
+
+exports[`serialize QuotaFailure 1`] = `
+{
+  "code": 2,
+  "details": [
+    {
+      "violations": [
+        {
+          "description": "Too many sites oreddi",
+          "subject": "account:12345",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`serialize RetryInfo 1`] = `
+{
+  "code": 2,
+  "details": [
+    {
+      "delay": 1000,
+    },
+  ],
+}
+`;
+
+exports[`toJSON 1`] = `
+{
+  "cause": {
+    "message": "bad stuff",
+    "name": "Error",
+  },
+  "code": 2,
+  "debug": {
+    "hahaha": "yes!",
+  },
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "Test",
+  "name": "Error",
+  "stack": Any<String>,
+}
+`;
