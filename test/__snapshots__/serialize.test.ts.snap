@@ -201,7 +201,7 @@ exports[`serialize/unserialize 2`] = `
   "message": "Test",
   "name": "Error",
   "stack": "Error: Test
-    at Function.fromJSON (.../lib/custom-error.ts:207:15)
+    at Function.fromJSON (.../lib/custom-error.ts:201:15)
     at .../test/serialize.test.ts:76:28
     at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
     at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
