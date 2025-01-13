@@ -2,15 +2,13 @@
 
 exports[`serialize 1`] = `
 {
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
+  "code": 2,
 }
 `;
 
 exports[`serialize BadRequest 1`] = `
 {
+  "code": 3,
   "details": [
     {
       "violations": [
@@ -21,15 +19,12 @@ exports[`serialize BadRequest 1`] = `
       ],
     },
   ],
-  "status": {
-    "id": 3,
-    "status": "INVALID_ARGUMENT",
-  },
 }
 `;
 
 exports[`serialize ErrorInfo 1`] = `
 {
+  "code": 2,
   "details": [
     {
       "metadata": {
@@ -38,15 +33,12 @@ exports[`serialize ErrorInfo 1`] = `
       "reason": "bad-stuff-happened",
     },
   ],
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
 }
 `;
 
 exports[`serialize Multis 1`] = `
 {
+  "code": 8,
   "details": [
     {
       "description": "Some website",
@@ -58,15 +50,12 @@ exports[`serialize Multis 1`] = `
     },
   ],
   "message": "You ran out of stuff",
-  "status": {
-    "id": 8,
-    "status": "RESOURCE_EXHAUSTED",
-  },
 }
 `;
 
 exports[`serialize QuotaFailure 1`] = `
 {
+  "code": 2,
   "details": [
     {
       "violations": [
@@ -77,40 +66,17 @@ exports[`serialize QuotaFailure 1`] = `
       ],
     },
   ],
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
 }
 `;
 
 exports[`serialize RetryInfo 1`] = `
 {
+  "code": 2,
   "details": [
     {
       "delay": 1000,
     },
   ],
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
-}
-`;
-
-exports[`serialize/unserialize 1`] = `
-{
-  "details": [
-    {
-      "locale": "en",
-      "message": "woo yeah",
-    },
-  ],
-  "message": "woo yeah",
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
 }
 `;
 
@@ -120,6 +86,7 @@ exports[`toJSON 1`] = `
     "message": "bad stuff",
     "name": "Error",
   },
+  "code": 2,
   "debug": {
     "hahaha": "yes!",
   },
@@ -132,9 +99,5 @@ exports[`toJSON 1`] = `
   "message": "Test",
   "name": "Error",
   "stack": Any<String>,
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
 }
 `;

@@ -19,13 +19,10 @@ exports[`CustomError with CustomError cause 1`] = `
 {
   "cause": [
     {
+      "code": 2,
       "debug": {
         "debug": {
           "woo1": "woo1",
-        },
-        "status": {
-          "id": 2,
-          "status": "UNKNOWN",
         },
       },
       "message": "previous",
@@ -33,16 +30,13 @@ exports[`CustomError with CustomError cause 1`] = `
       "stack": Any<String>,
     },
   ],
+  "code": 2,
   "debug": {
     "woo2": "woo2",
   },
   "message": "current",
   "name": "Error",
   "stack": Any<String>,
-  "status": {
-    "id": 2,
-    "status": "UNKNOWN",
-  },
 }
 `;
 
@@ -155,5 +149,67 @@ exports[`dont explode on voids: undefined 1`] = `
   },
   "message": "undefined",
   "name": "Error",
+}
+`;
+
+exports[`serialize/unserialize 1`] = `
+{
+  "code": 2,
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "woo yeah",
+}
+`;
+
+exports[`serialize/unserialize 2`] = `
+{
+  "code": 2,
+  "debug": {
+    "params": {
+      "code": 2,
+      "details": [
+        {
+          "locale": "en",
+          "message": "woo yeah",
+        },
+      ],
+      "message": "Test",
+      "name": "Error",
+      "stack": "Error: Test
+    at .../test/serialize.test.ts:71:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
+    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+    at withEnv (file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)",
+    },
+  },
+  "details": [
+    {
+      "locale": "en",
+      "message": "woo yeah",
+    },
+  ],
+  "message": "Test",
+  "name": "Error",
+  "stack": "Error: Test
+    at Function.fromJSON (.../lib/custom-error.ts:207:15)
+    at .../test/serialize.test.ts:76:28
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
+    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
+    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@22.10.5/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11",
 }
 `;
