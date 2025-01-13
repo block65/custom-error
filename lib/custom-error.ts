@@ -1,11 +1,8 @@
 import { isErrorLike } from "serialize-error";
-import type { CustomErrorSerialized } from "./serialize.js";
 import type { ErrorDetail, LocalisedMessage } from "./types.js";
 import { withNullProto } from "./utils.js";
 
 export type DebugData = Record<string, unknown>;
-
-const kCustomError = Symbol.for("CustomError");
 
 enum StatusCode {
 	OK = 0,
@@ -27,100 +24,39 @@ enum StatusCode {
 	UNAUTHENTICATED = 16,
 }
 
-// export type StatusObject = {
-// 	[T in StatusCode]: {
-// 		id: T;
-// 		status: keyof typeof StatusCode[T];
-// 	};
-// }[StatusCode]
+// just export the type, we CustomError.XX should be used for the actual code
+export type { StatusCode };
 
-export type StatusObject = {
-	[K in keyof StatusCode]: {
-		id: StatusCode[K];
-		status: K;
-	};
-}[keyof StatusCode];
+type SerializedError<T extends StatusCode | number> = {
+	readonly debug?: DebugData;
+	readonly stack?: string;
+	readonly cause?: SerializedError<StatusCode>[];
+	readonly details?: ErrorDetail[];
+	readonly name: string;
+	readonly message: string;
+	readonly code: T;
+};
 
-export class CustomError<
-	T extends StatusCode = StatusCode.UNKNOWN,
-> extends Error {
-	static readonly OK = 0;
-	static readonly CANCELLED = 1;
-	static readonly UNKNOWN = 2;
-	static readonly INVALID_ARGUMENT = 3;
-	static readonly DEADLINE_EXCEEDED = 4;
-	static readonly NOT_FOUND = 5;
-	static readonly ALREADY_EXISTS = 6;
-	static readonly PERMISSION_DENIED = 7;
-	static readonly RESOURCE_EXHAUSTED = 8;
-	static readonly FAILED_PRECONDITION = 9;
-	static readonly ABORTED = 10;
-	static readonly OUT_OF_RANGE = 11;
-	static readonly UNIMPLEMENTED = 12;
-	static readonly INTERNAL = 13;
-	static readonly UNAVAILABLE = 14;
-	static readonly DATA_LOSS = 15;
-	static readonly UNAUTHENTICATED = 16;
+const kCustomError = Symbol.for("CustomError");
 
-	// readonly codes = new Map([
-	// 	[CustomError.OK, "OK"],
-	// 	[CustomError.CANCELLED, "CANCELLED"],
-	// 	[CustomError.UNKNOWN, "UNKNOWN"],
-	// 	[CustomError.INVALID_ARGUMENT, "INVALID_ARGUMENT"],
-	// 	[CustomError.DEADLINE_EXCEEDED, "DEADLINE_EXCEEDED"],
-	// 	[CustomError.NOT_FOUND, "NOT_FOUND"],
-	// 	[CustomError.ALREADY_EXISTS, "ALREADY_EXISTS"],
-	// 	[CustomError.PERMISSION_DENIED, "PERMISSION_DENIED"],
-	// 	[CustomError.RESOURCE_EXHAUSTED, "RESOURCE_EXHAUSTED"],
-	// 	[CustomError.FAILED_PRECONDITION, "FAILED_PRECONDITION"],
-	// 	[CustomError.ABORTED, "ABORTED"],
-	// 	[CustomError.OUT_OF_RANGE, "OUT_OF_RANGE"],
-	// 	[CustomError.UNIMPLEMENTED, "UNIMPLEMENTED"],
-	// 	[CustomError.INTERNAL, "INTERNAL"],
-	// 	[CustomError.UNAVAILABLE, "UNAVAILABLE"],
-	// 	[CustomError.DATA_LOSS, "DATA_LOSS"],
-	// 	[CustomError.UNAUTHENTICATED, "UNAUTHENTICATED"],
-	// ] as const);
-
-	readonly codes = Object.freeze({
-		[CustomError.OK]: "OK",
-		[CustomError.CANCELLED]: "CANCELLED",
-		[CustomError.UNKNOWN]: "UNKNOWN",
-		[CustomError.INVALID_ARGUMENT]: "INVALID_ARGUMENT",
-		[CustomError.DEADLINE_EXCEEDED]: "DEADLINE_EXCEEDED",
-		[CustomError.NOT_FOUND]: "NOT_FOUND",
-		[CustomError.ALREADY_EXISTS]: "ALREADY_EXISTS",
-		[CustomError.PERMISSION_DENIED]: "PERMISSION_DENIED",
-		[CustomError.RESOURCE_EXHAUSTED]: "RESOURCE_EXHAUSTED",
-		[CustomError.FAILED_PRECONDITION]: "FAILED_PRECONDITION",
-		[CustomError.ABORTED]: "ABORTED",
-		[CustomError.OUT_OF_RANGE]: "OUT_OF_RANGE",
-		[CustomError.UNIMPLEMENTED]: "UNIMPLEMENTED",
-		[CustomError.INTERNAL]: "INTERNAL",
-		[CustomError.UNAVAILABLE]: "UNAVAILABLE",
-		[CustomError.DATA_LOSS]: "DATA_LOSS",
-		[CustomError.UNAUTHENTICATED]: "UNAUTHENTICATED",
-	});
-
-	// static http = new Map([
-	// 	[CustomError.OK, 200],
-	// 	[CustomError.CANCELLED, 299],
-	// 	[CustomError.UNKNOWN, 500],
-	// 	[CustomError.INVALID_ARGUMENT, 400],
-	// 	[CustomError.DEADLINE_EXCEEDED, 504],
-	// 	[CustomError.NOT_FOUND, 404],
-	// 	[CustomError.ALREADY_EXISTS, 409],
-	// 	[CustomError.PERMISSION_DENIED, 403],
-	// 	[CustomError.RESOURCE_EXHAUSTED, 403],
-	// 	[CustomError.FAILED_PRECONDITION, 400],
-	// 	[CustomError.ABORTED, 299],
-	// 	[CustomError.OUT_OF_RANGE, 400],
-	// 	[CustomError.UNIMPLEMENTED, 501],
-	// 	[CustomError.INTERNAL, 500],
-	// 	[CustomError.UNAVAILABLE, 503],
-	// 	[CustomError.DATA_LOSS, 500],
-	// 	[CustomError.UNAUTHENTICATED, 401],
-	// ]);
+export class CustomError extends Error {
+	static readonly OK = StatusCode.OK;
+	static readonly CANCELLED = StatusCode.CANCELLED;
+	static readonly UNKNOWN = StatusCode.UNKNOWN;
+	static readonly INVALID_ARGUMENT = StatusCode.INVALID_ARGUMENT;
+	static readonly DEADLINE_EXCEEDED = StatusCode.DEADLINE_EXCEEDED;
+	static readonly NOT_FOUND = StatusCode.NOT_FOUND;
+	static readonly ALREADY_EXISTS = StatusCode.ALREADY_EXISTS;
+	static readonly PERMISSION_DENIED = StatusCode.PERMISSION_DENIED;
+	static readonly RESOURCE_EXHAUSTED = StatusCode.RESOURCE_EXHAUSTED;
+	static readonly FAILED_PRECONDITION = StatusCode.FAILED_PRECONDITION;
+	static readonly ABORTED = StatusCode.ABORTED;
+	static readonly OUT_OF_RANGE = StatusCode.OUT_OF_RANGE;
+	static readonly UNIMPLEMENTED = StatusCode.UNIMPLEMENTED;
+	static readonly INTERNAL = StatusCode.INTERNAL;
+	static readonly UNAVAILABLE = StatusCode.UNAVAILABLE;
+	static readonly DATA_LOSS = StatusCode.DATA_LOSS;
+	static readonly UNAUTHENTICATED = StatusCode.UNAUTHENTICATED;
 
 	static http = Object.freeze({
 		[CustomError.OK]: 200,
@@ -140,7 +76,7 @@ export class CustomError<
 		[CustomError.UNAVAILABLE]: 503,
 		[CustomError.DATA_LOSS]: 500,
 		[CustomError.UNAUTHENTICATED]: 401,
-	});
+	} as const);
 
 	/**
 	 * The previous error that occurred, useful if "wrapping" an error to hide
@@ -158,20 +94,7 @@ export class CustomError<
 	/**
 	 * Status code suitable to coarsely determine the reason for error
 	 */
-	readonly statusCode: T = CustomError.UNKNOWN as T;
-
-	/**
-	 * @deprecated
-	 * @use {statusCode} or {status}
-	 */
-	readonly code = this.statusCode;
-
-	get status() {
-		return {
-			id: this.statusCode,
-			status: this.codes[this.statusCode],
-		};
-	}
+	readonly code: StatusCode = CustomError.UNKNOWN;
 
 	/**
 	 * Contains arbitrary debug data for developer troubleshooting
@@ -235,7 +158,7 @@ export class CustomError<
 			...(localised?.message && {
 				message: localised.message,
 			}),
-			status: this.status,
+			code: this.code,
 			...(this.details && { details: this.details }),
 		};
 	}
@@ -247,7 +170,7 @@ export class CustomError<
 		return withNullProto({
 			name: this.name,
 			message: this.message,
-			status: this.status,
+			code: this.code,
 			...(this.details && { details: this.details }),
 			...(isErrorLike(this.cause) && {
 				cause:
@@ -265,18 +188,17 @@ export class CustomError<
 
 	/**
 	 * "Hydrates" a previously serialised error object
-	 * @param {CustomErrorSerialized} params
 	 */
-	public static fromJSON<S extends StatusCode = StatusCode.UNKNOWN>(
-		params: CustomErrorSerialized<S>,
+	public static fromJSON<const T extends StatusCode | number>(
+		params: SerializedError<T>,
 	) {
-		const {
-			// status = CustomError.UNKNOWN,
-			message,
-			details = [],
-		} = params;
+		const { message, details, code } = params;
 
-		const err = new CustomError(message).debug({
+		class ImportedError extends CustomError {
+			override readonly code = code;
+		}
+
+		const err = new ImportedError(message).debug({
 			params,
 		});
 
@@ -289,13 +211,12 @@ export class CustomError<
 
 	/**
 	 * An automatically determined HTTP status code
-	 * @return {HttpStatusCode}
 	 */
 	public static suggestHttpResponseCode(err: Error | CustomError | unknown) {
-		const code = CustomError.isCustomError(err)
-			? err.status.id
-			: CustomError.UNKNOWN;
-		return CustomError.http[code] || CustomError.http[CustomError.UNKNOWN];
+		return (
+			(CustomError.isCustomError(err) && CustomError.http[err.code]) ||
+			CustomError.http[CustomError.UNKNOWN]
+		);
 	}
 }
 
