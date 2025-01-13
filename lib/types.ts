@@ -1,5 +1,3 @@
-import type { StatusCode, StatusObject } from "./custom-error.js";
-
 export interface ErrorInfo {
 	reason: string;
 	metadata: Record<string, string | number>;

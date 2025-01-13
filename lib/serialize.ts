@@ -4,23 +4,7 @@ import {
 	isErrorLike,
 	serializeError,
 } from "serialize-error";
-import { CustomError, type StatusCode } from "./custom-error.js";
-import type { ErrorDetail } from "./types.js";
-
-export type CustomErrorSerialized<TStatusKey extends StatusCode> = {
-	status: { status: TStatusKey };
-	message?: string;
-	details?: ErrorDetail[];
-};
-
-// export interface SerializedError {
-// 	name: string;
-// 	message: string;
-// 	status: Extract<StatusObject, { status: TStatusKey }>;
-// 	stack?: string;
-// 	cause?: SerializedError[] | unknown;
-// 	[key: string]: unknown;
-// }
+import { CustomError } from "./custom-error.js";
 
 function flatten(
 	err: unknown | ErrorLike | Error | CustomError,
