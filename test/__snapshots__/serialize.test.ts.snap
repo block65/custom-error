@@ -5,6 +5,7 @@ exports[`AssertionError 1`] = `
   "code": "ERR_ASSERTION",
   "debug": {
     "actual": false,
+    "diff": "simple",
     "expected": true,
     "generatedMessage": false,
     "operator": "==",
@@ -180,16 +181,16 @@ exports[`serialize/unserialize 2`] = `
       "message": "Test",
       "name": "Error",
       "stack": "Error: Test
-    at .../test/serialize.test.ts:71:14
-    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
-    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
-    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
-    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
-    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
-    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
-    at withEnv (file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)",
+    at .../serialize.test.ts:71:14
+    at .../chunk-hooks.js:155:11
+    at .../chunk-hooks.js:752:26
+    at .../chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (.../chunk-hooks.js:1863:10)
+    at runTest (.../chunk-hooks.js:1574:12)
+    at runSuite (.../chunk-hooks.js:1729:8)
+    at runFiles (.../chunk-hooks.js:1787:3)
+    at startTests (.../chunk-hooks.js:1820:3)",
     },
   },
   "details": [
@@ -201,15 +202,15 @@ exports[`serialize/unserialize 2`] = `
   "message": "Test",
   "name": "Error",
   "stack": "Error: Test
-    at Function.fromJSON (.../lib/custom-error.ts:201:15)
-    at .../test/serialize.test.ts:76:28
-    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:39:7)
-    at runTest (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1056:17)
-    at runSuite (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1205:15)
-    at runFiles (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1262:5)
-    at startTests (file://.../node_modules/.pnpm/@vitest+runner@2.1.8/node_modules/@vitest/runner/dist/index.js:1271:3)
-    at file://.../node_modules/.pnpm/vitest@2.1.8_@types+node@20.17.12/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11",
+    at CustomError.fromJSON (.../custom-error.ts:207:15)
+    at .../serialize.test.ts:76:28
+    at .../chunk-hooks.js:155:11
+    at .../chunk-hooks.js:752:26
+    at .../chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (.../chunk-hooks.js:1863:10)
+    at runTest (.../chunk-hooks.js:1574:12)
+    at runSuite (.../chunk-hooks.js:1729:8)
+    at runFiles (.../chunk-hooks.js:1787:3)",
 }
 `;
