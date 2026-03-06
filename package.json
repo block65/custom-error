@@ -9,7 +9,7 @@
 		"lib"
 	],
 	"scripts": {
-		"preversion": "make clean && make test && make"
+		"preversion": "make test && make"
 	},
 	"dependencies": {
 		"serialize-error": "^13.0.1"

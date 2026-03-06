@@ -1,15 +1,11 @@
 
 SRCS = $(wildcard lib/**)
 
-all: dist
+all: typecheck
 
-.PHONY: clean distclean
+.PHONY: distclean
 distclean:
 	rm -rf node_modules
-
-.PHONY: clean
-clean: node_modules
-	pnpm exec tsc -b --clean
 
 .PHONY: test
 test: node_modules
@@ -18,17 +14,14 @@ test: node_modules
 node_modules: package.json
 	pnpm install
 
-dist: node_modules tsconfig.json $(SRCS)
+.PHONY: typecheck
+typecheck: node_modules tsconfig.json $(SRCS)
 	pnpm exec tsc
-
-.PHONY: dev
-dev: node_modules
-	pnpm exec tsc -w
 
 .PHONY: pretty
 pretty: node_modules
 	pnpm exec prettier --write .
 
 .PHONY: publint
-publint: dist
+publint: typecheck
 	npx publint --strict
