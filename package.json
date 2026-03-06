@@ -5,6 +5,9 @@
 	"license": "MIT",
 	"type": "module",
 	"exports": "./lib/main.ts",
+	"files": [
+		"lib"
+	],
 	"scripts": {
 		"preversion": "make clean && make test && make"
 	},
