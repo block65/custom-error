@@ -202,7 +202,7 @@ exports[`serialize/unserialize 2`] = `
   "message": "Test",
   "name": "Error",
   "stack": "Error: Test
-    at CustomError.fromJSON (.../custom-error.ts:227:15)
+    at CustomError.fromJSON (.../custom-error.ts:207:15)
     at .../serialize.test.ts:76:28
     at .../chunk-hooks.js:155:11
     at .../chunk-hooks.js:752:26
