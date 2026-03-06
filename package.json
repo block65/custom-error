@@ -1,35 +1,23 @@
 {
 	"name": "@block65/custom-error",
-	"version": "13.0.0-rc.0",
+	"version": "14.0.0",
 	"private": false,
 	"license": "MIT",
 	"type": "module",
-	"exports": {
-		".": {
-			"types": "./dist/lib/index.d.ts",
-			"default": "./dist/lib/index.js"
-		}
-	},
-	"files": [
-		"dist/lib/*.js",
-		"dist/lib/*.d.ts"
-	],
+	"exports": "./lib/main.ts",
 	"scripts": {
 		"preversion": "make clean && make test && make"
 	},
 	"dependencies": {
-		"serialize-error": "^12.0.0"
+		"serialize-error": "^13.0.1"
 	},
 	"devDependencies": {
-		"@tsconfig/node18": "^18.2.4",
-		"@tsconfig/strictest": "^2.0.5",
-		"vitest": "^2.1.8",
-		"@biomejs/biome": "^1.9.4",
-		"@types/node": "^20.17.12",
-		"typescript": "^5.7.3"
+		"@tsconfig/node24": "^24.0.4",
+		"@tsconfig/strictest": "^2.0.8",
+		"@types/node": "^24.0.0",
+		"typescript": "^5.8.0"
 	},
 	"engines": {
-		"node": ">=20.0.0"
-	},
-	"packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"
+		"node": ">=24.0.0"
+	}
 }

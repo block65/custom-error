@@ -4,7 +4,7 @@ import {
 	isErrorLike,
 	serializeError,
 } from "serialize-error";
-import { CustomError } from "./custom-error.js";
+import { CustomError } from "./custom-error.ts";
 
 function flatten(
 	err: unknown | ErrorLike | Error | CustomError,

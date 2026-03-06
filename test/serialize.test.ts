@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { expect, expectTypeOf, test } from "vitest";
-import { CustomError, type StatusCode, serializeError } from "../lib/index.js";
+import { CustomError, type StatusCode, serializeError } from "../lib/main.ts";
 
 function throwUrlError() {
 	return new URL("/", "lol");

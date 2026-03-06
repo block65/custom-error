@@ -1,14 +1,18 @@
-import { dirname } from "node:path";
 import type { SnapshotSerializer } from "vitest";
 
 type StackIsh = { stack: string };
 
-const regex = new RegExp(dirname(import.meta.dirname), "g");
+// Matches absolute file paths (with optional file:// prefix)
+const absolutePathRe = /(?:file:\/\/)?\/(?:[\w@.+-]+\/)+/g;
+
+function hasAbsolutePaths(str: string): boolean {
+	return /(?:file:\/\/)?\/(?:[\w@.+-]+\/)+/.test(str);
+}
 
 export default {
 	serialize(val: StackIsh, config, indentation, depth, refs, printer) {
 		return printer(
-			{ ...val, stack: val.stack.replaceAll(regex, "...") },
+			{ ...val, stack: val.stack.replaceAll(absolutePathRe, ".../") },
 			config,
 			indentation,
 			depth,
@@ -21,7 +25,7 @@ export default {
 			typeof val === "object" &&
 			"stack" in val &&
 			typeof val.stack === "string" &&
-			regex.test(val.stack)
+			hasAbsolutePaths(val.stack)
 		);
 	},
 } as SnapshotSerializer;

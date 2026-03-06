@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { CustomError } from "../lib/index.js";
+import { CustomError } from "../lib/main.ts";
 
 test("Non Custom Error", async () => {
 	const err = new Error("Test");

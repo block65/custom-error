@@ -1,33 +1,59 @@
 import { isErrorLike } from "serialize-error";
-import type { ErrorDetail, LocalisedMessage } from "./types.js";
-import { withNullProto } from "./utils.js";
+import type { ErrorDetail, LocalisedMessage } from "./types.ts";
+import { withNullProto } from "./utils.ts";
 
 export type DebugData = Record<string, unknown>;
 
-enum StatusCode {
-	OK = 0,
-	CANCELLED = 1,
-	UNKNOWN = 2,
-	INVALID_ARGUMENT = 3,
-	DEADLINE_EXCEEDED = 4,
-	NOT_FOUND = 5,
-	ALREADY_EXISTS = 6,
-	PERMISSION_DENIED = 7,
-	RESOURCE_EXHAUSTED = 8,
-	FAILED_PRECONDITION = 9,
-	ABORTED = 10,
-	OUT_OF_RANGE = 11,
-	UNIMPLEMENTED = 12,
-	INTERNAL = 13,
-	UNAVAILABLE = 14,
-	DATA_LOSS = 15,
-	UNAUTHENTICATED = 16,
+// enum StatusCode {
+// 	OK = 0,
+// 	CANCELLED = 1,
+// 	UNKNOWN = 2,
+// 	INVALID_ARGUMENT = 3,
+// 	DEADLINE_EXCEEDED = 4,
+// 	NOT_FOUND = 5,
+// 	ALREADY_EXISTS = 6,
+// 	PERMISSION_DENIED = 7,
+// 	RESOURCE_EXHAUSTED = 8,
+// 	FAILED_PRECONDITION = 9,
+// 	ABORTED = 10,
+// 	OUT_OF_RANGE = 11,
+// 	UNIMPLEMENTED = 12,
+// 	INTERNAL = 13,
+// 	UNAVAILABLE = 14,
+// 	DATA_LOSS = 15,
+// 	UNAUTHENTICATED = 16,
+// }
+
+const StatusCode = {
+	OK: 0 as const,
+	CANCELLED: 1 as const,
+	UNKNOWN: 2 as const,
+	INVALID_ARGUMENT: 3 as const,
+	DEADLINE_EXCEEDED: 4 as const,
+	NOT_FOUND: 5 as const,
+	ALREADY_EXISTS: 6 as const,
+	PERMISSION_DENIED: 7 as const,
+	RESOURCE_EXHAUSTED: 8 as const,
+	FAILED_PRECONDITION: 9 as const,
+	ABORTED: 10 as const,
+	OUT_OF_RANGE: 11 as const,
+	UNIMPLEMENTED: 12 as const,
+	INTERNAL: 13 as const,
+	UNAVAILABLE: 14 as const,
+	DATA_LOSS: 15 as const,
+	UNAUTHENTICATED: 16 as const,
 }
 
 // just export the type, we CustomError.XX should be used for the actual code
-export type { StatusCode };
+export type StatusCode = typeof StatusCode[keyof typeof StatusCode];
 
-type SerializedError<T extends StatusCode | number> = {
+const statusCodes: ReadonlySet<number> = new Set(Object.values(StatusCode));
+
+export function isStatusCode(value: unknown): value is StatusCode {
+	return typeof value === 'number' && statusCodes.has(value);
+}
+
+export type SerializedError<T extends StatusCode> = {
 	readonly debug?: DebugData;
 	readonly stack?: string;
 	readonly cause?: SerializedError<StatusCode>[];
@@ -60,17 +86,17 @@ export class CustomError extends Error {
 
 	static http = Object.freeze({
 		[CustomError.OK]: 200,
-		[CustomError.CANCELLED]: 299,
+		[CustomError.CANCELLED]: 499,
 		[CustomError.UNKNOWN]: 500,
 		[CustomError.INVALID_ARGUMENT]: 400,
 		[CustomError.DEADLINE_EXCEEDED]: 504,
 		[CustomError.NOT_FOUND]: 404,
 		[CustomError.ALREADY_EXISTS]: 409,
 		[CustomError.PERMISSION_DENIED]: 403,
-		[CustomError.RESOURCE_EXHAUSTED]: 403,
+		[CustomError.RESOURCE_EXHAUSTED]: 429,
 		[CustomError.FAILED_PRECONDITION]: 400,
-		[CustomError.ABORTED]: 299,
-		[CustomError.OUT_OF_RANGE]: 400,
+		[CustomError.ABORTED]: 409,
+		[CustomError.OUT_OF_RANGE]: 422,
 		[CustomError.UNIMPLEMENTED]: 501,
 		[CustomError.INTERNAL]: 500,
 		[CustomError.UNAVAILABLE]: 503,
@@ -114,7 +140,7 @@ export class CustomError extends Error {
 		this.cause = cause;
 
 		// FF doesnt have captureStackTrace
-		if (Error.captureStackTrace) {
+		if ('captureStackTrace' in Error) {
 			Error.captureStackTrace(this, this.constructor);
 		}
 
@@ -189,13 +215,13 @@ export class CustomError extends Error {
 	/**
 	 * "Hydrates" a previously serialised error object
 	 */
-	public static fromJSON<const T extends StatusCode | number>(
+	public static fromJSON<const T extends StatusCode>(
 		params: SerializedError<T>,
 	) {
 		const { message, details, code } = params;
 
 		class ImportedError extends CustomError {
-			override readonly code = code;
+			override readonly code = code as StatusCode;
 		}
 
 		const err = new ImportedError(message).debug({
@@ -215,9 +241,11 @@ export class CustomError extends Error {
 	public static suggestHttpResponseCode(err: Error | CustomError | unknown) {
 		return (
 			(CustomError.isCustomError(err) && CustomError.http[err.code]) ||
-			CustomError.http[CustomError.UNKNOWN]
+			CustomError.http[CustomError.UNKNOWN] ||
+			500
 		);
 	}
+
 }
 
 // Mark all instances of 'CustomError'
