@@ -15,7 +15,8 @@
 		"@tsconfig/node24": "^24.0.4",
 		"@tsconfig/strictest": "^2.0.8",
 		"@types/node": "^24.0.0",
-		"typescript": "^5.8.0"
+		"typescript": "^5.8.0",
+		"vitest": "^3.0.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"
