@@ -19,14 +19,9 @@
 		"serialize-error": "^13.0.1"
 	},
 	"devDependencies": {
-		"@tsconfig/node24": "^24.0.4",
 		"@tsconfig/strictest": "^2.0.8",
-		"@types/node": "^24.0.0",
-		"typescript": "^5.8.0",
-		"vitest": "^3.0.0"
-	},
-	"engines": {
-		"node": ">=24.0.0"
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.5"
 	},
 	"packageManager": "pnpm@10.30.3"
 }

@@ -1,5 +1,4 @@
-import assert from "node:assert";
-import { expect, expectTypeOf, test } from "vitest";
+import { assert, expect, expectTypeOf, test } from "vitest";
 import { CustomError, type StatusCode, serializeError } from "../lib/main.ts";
 
 function throwUrlError() {

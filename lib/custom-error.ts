@@ -123,8 +123,8 @@ export class CustomError extends Error {
 
 		this.cause = cause;
 
-		// FF doesnt have captureStackTrace
-		if ('captureStackTrace' in Error) {
+		// non-v8 environments doesn't have captureStackTrace
+		if (typeof Error.captureStackTrace === "function") {
 			Error.captureStackTrace(this, this.constructor);
 		}
 

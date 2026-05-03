@@ -1,8 +1,9 @@
 {
-	"extends": ["@tsconfig/node24", "@tsconfig/strictest"],
+	"extends": ["@tsconfig/strictest"],
 	"compilerOptions": {
 		"noPropertyAccessFromIndexSignature": false,
 		"allowImportingTsExtensions": true,
+		"lib": ["es2024", "webworker"],
 		"noEmit": true
 	},
 	"include": ["./lib", "./test"]

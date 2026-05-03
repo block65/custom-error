@@ -2,13 +2,12 @@
 
 exports[`AssertionError 1`] = `
 {
-  "code": "ERR_ASSERTION",
   "debug": {
-    "actual": false,
-    "diff": "simple",
-    "expected": true,
-    "generatedMessage": false,
-    "operator": "==",
+    "actual": null,
+    "expected": undefined,
+    "ok": false,
+    "operator": "strictEqual",
+    "showDiff": false,
   },
   "message": "asserting false",
   "name": "AssertionError",
@@ -181,16 +180,16 @@ exports[`serialize/unserialize 2`] = `
       "message": "Test",
       "name": "Error",
       "stack": "Error: Test
-    at .../serialize.test.ts:71:14
-    at .../chunk-hooks.js:155:11
-    at .../chunk-hooks.js:752:26
-    at .../chunk-hooks.js:1897:20
+    at .../serialize.test.ts:70:14
+    at .../chunk-artifact.js:302:11
+    at .../chunk-artifact.js:1903:26
+    at .../chunk-artifact.js:2326:20
     at new Promise (<anonymous>)
-    at runWithTimeout (.../chunk-hooks.js:1863:10)
-    at runTest (.../chunk-hooks.js:1574:12)
-    at runSuite (.../chunk-hooks.js:1729:8)
-    at runFiles (.../chunk-hooks.js:1787:3)
-    at startTests (.../chunk-hooks.js:1820:3)",
+    at runWithCancel (.../chunk-artifact.js:2323:10)
+    at .../chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (.../chunk-artifact.js:2272:10)
+    at .../chunk-artifact.js:2955:64",
     },
   },
   "details": [
@@ -203,14 +202,14 @@ exports[`serialize/unserialize 2`] = `
   "name": "Error",
   "stack": "Error: Test
     at CustomError.fromJSON (.../custom-error.ts:214:15)
-    at .../serialize.test.ts:76:28
-    at .../chunk-hooks.js:155:11
-    at .../chunk-hooks.js:752:26
-    at .../chunk-hooks.js:1897:20
+    at .../serialize.test.ts:75:28
+    at .../chunk-artifact.js:302:11
+    at .../chunk-artifact.js:1903:26
+    at .../chunk-artifact.js:2326:20
     at new Promise (<anonymous>)
-    at runWithTimeout (.../chunk-hooks.js:1863:10)
-    at runTest (.../chunk-hooks.js:1574:12)
-    at runSuite (.../chunk-hooks.js:1729:8)
-    at runFiles (.../chunk-hooks.js:1787:3)",
+    at runWithCancel (.../chunk-artifact.js:2323:10)
+    at .../chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (.../chunk-artifact.js:2272:10)",
 }
 `;
