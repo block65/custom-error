@@ -1,27 +1,44 @@
-export interface ErrorInfo {
+export type StructuredCloneable =
+	| null
+	| undefined
+	| boolean
+	| number
+	| bigint
+	| string
+	| Date
+	| RegExp
+	| Error
+	| ArrayBuffer
+	| ArrayBufferView
+	| Map<StructuredCloneable, StructuredCloneable>
+	| Set<StructuredCloneable>
+	| readonly StructuredCloneable[]
+	| { readonly [key: string]: StructuredCloneable };
+
+export type ErrorInfo = {
 	reason: string;
 	metadata: Record<string, string | number>;
-}
+};
 
-export interface RetryInfo {
+export type RetryInfo = {
 	delay: number;
-}
+};
 
-export interface BadRequest {
+export type BadRequest = {
 	violations: { field: string; description: string }[];
-}
+};
 
-export interface LocalisedMessage {
+export type LocalisedMessage = {
 	locale: "en";
 	message: string;
-}
+};
 
-export interface Help {
+export type Help = {
 	url: string;
 	description: string;
-}
+};
 
-export interface QuotaFailure {
+export type QuotaFailure = {
 	violations: {
 		/**
 		 * subject of which quota check failed ie: `account:1234567`
@@ -32,7 +49,7 @@ export interface QuotaFailure {
 		 */
 		description: string;
 	}[];
-}
+};
 
 export type ErrorDetail =
 	| ErrorInfo

@@ -1,8 +1,12 @@
 import { isErrorLike } from "serialize-error";
-import type { ErrorDetail, LocalisedMessage } from "./types.ts";
-import { withNullProto } from "./utils.ts";
+import type {
+	ErrorDetail,
+	LocalisedMessage,
+	StructuredCloneable,
+} from "./types.ts";
+import { deepFreeze } from "./utils.ts";
 
-export type DebugData = Record<string, unknown>;
+export type DebugData = Record<string, StructuredCloneable>;
 
 const StatusCode = {
 	OK: 0 as const,
@@ -135,7 +139,7 @@ export class CustomError extends Error {
 	 * Add arbitrary debug data to the error object for developer troubleshooting
 	 */
 	public debug(data: DebugData): this {
-		this.#debug = withNullProto({
+		this.#debug = structuredClone({
 			...this.#debug,
 			...data,
 		});
@@ -173,7 +177,10 @@ export class CustomError extends Error {
 	 * JSON representation of the error object that can be "hydrated" later
 	 */
 	public toJSON() {
-		return withNullProto({
+		// Freeze on first read: we no longer exclusively own #debug once published.
+		// deepFreeze is idempotent — re-runs short-circuit on Object.isFrozen.
+		if (this.#debug != null) deepFreeze(this.#debug);
+		return {
 			name: this.name,
 			message: this.message,
 			code: this.code,
@@ -189,7 +196,7 @@ export class CustomError extends Error {
 			}),
 			...(this.stack && { stack: this.stack }),
 			...(this.#debug && { debug: this.#debug }),
-		});
+		};
 	}
 
 	/**
