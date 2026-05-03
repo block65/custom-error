@@ -26,15 +26,15 @@ const StatusCode = {
 	UNAVAILABLE: 14 as const,
 	DATA_LOSS: 15 as const,
 	UNAUTHENTICATED: 16 as const,
-}
+};
 
 // just export the type, we CustomError.XX should be used for the actual code
-export type StatusCode = typeof StatusCode[keyof typeof StatusCode];
+export type StatusCode = (typeof StatusCode)[keyof typeof StatusCode];
 
 const statusCodes: ReadonlySet<number> = new Set(Object.values(StatusCode));
 
 export function isStatusCode(value: unknown): value is StatusCode {
-	return typeof value === 'number' && statusCodes.has(value);
+	return typeof value === "number" && statusCodes.has(value);
 }
 
 export type SerializedError<T extends StatusCode> = {
@@ -234,7 +234,6 @@ export class CustomError extends Error {
 			500
 		);
 	}
-
 }
 
 // Mark all instances of 'CustomError'
