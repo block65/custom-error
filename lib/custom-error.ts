@@ -138,6 +138,7 @@ export class CustomError extends Error {
 	/**
 	 * Add arbitrary debug data to the error object for developer troubleshooting
 	 */
+	// fallow-ignore-next-line unused-class-member
 	public debug(data: DebugData): this {
 		this.#debug = structuredClone({
 			...this.#debug,
@@ -151,6 +152,7 @@ export class CustomError extends Error {
 	 * @param {ErrorDetail} details
 	 * @return {this}
 	 */
+	// fallow-ignore-next-line unused-class-member
 	public addDetail(...details: ErrorDetail[]) {
 		this.details = (this.details || []).concat(details);
 		return this;
@@ -227,6 +229,7 @@ export class CustomError extends Error {
 	/**
 	 * An automatically determined HTTP status code
 	 */
+	// fallow-ignore-next-line unused-class-member
 	public static suggestHttpResponseCode(err: Error | CustomError | unknown) {
 		return (
 			(CustomError.isCustomError(err) && CustomError.http[err.code]) ||

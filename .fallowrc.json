@@ -1,0 +1,15 @@
+{
+	"$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+	"entry": [
+		"lib/main.ts",
+		"test/stack-serializer.ts"
+	],
+	"rules": {
+		"unused-dependencies": "warn"
+	},
+	"health": {
+		"ignore": [
+			"test/stack-serializer.ts"
+		]
+	}
+}

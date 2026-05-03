@@ -9,6 +9,16 @@ function hasAbsolutePaths(str: string): boolean {
 	return /(?:file:\/\/)?\/(?:[\w@.+-]+\/)+/.test(str);
 }
 
+function isStackIsh(val: unknown): val is StackIsh {
+	if (!val || typeof val !== "object" || !("stack" in val)) {
+		return false;
+	}
+	if (typeof val.stack !== "string") {
+		return false;
+	}
+	return hasAbsolutePaths(val.stack);
+}
+
 export default {
 	serialize(val: StackIsh, config, indentation, depth, refs, printer) {
 		return printer(
@@ -19,13 +29,5 @@ export default {
 			refs,
 		);
 	},
-	test(val: unknown): val is StackIsh {
-		return (
-			!!val &&
-			typeof val === "object" &&
-			"stack" in val &&
-			typeof val.stack === "string" &&
-			hasAbsolutePaths(val.stack)
-		);
-	},
+	test: isStackIsh,
 } as SnapshotSerializer;

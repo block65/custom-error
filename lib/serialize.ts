@@ -20,44 +20,45 @@ function flatten(
 	return accum;
 }
 
+function serializeCustomError(err: CustomError): ErrorObject {
+	const { cause, ...rest } = serializeError(err);
+	const causes = cause ? flatten(cause) : undefined;
+	return {
+		...rest,
+		...(causes && { cause: causes.map(recursiveSerializeError) }),
+	} satisfies ErrorObject;
+}
+
+function serializeGenericError(err: ErrorLike): ErrorObject {
+	const { name, message, stack, cause, code, ...rest } = serializeError(err);
+	return {
+		...(name && { name }),
+		...(message && { message }),
+		...(code && { code }),
+		...(stack && { stack }),
+		...(!!cause && { cause: [recursiveSerializeError(cause)] }),
+		...(rest && { debug: rest }),
+	};
+}
+
+function serializeNonError(err: unknown): ErrorObject {
+	return {
+		name: "Error",
+		message: String(err),
+		debug: { typeofErr: typeof err, err: String(err) },
+	};
+}
+
 function recursiveSerializeError(
 	err: unknown | ErrorLike | Error | CustomError,
 ): ErrorObject {
 	if (CustomError.isCustomError(err)) {
-		const { cause, ...rest } = serializeError(err);
-
-		const causes = cause ? flatten(cause) : undefined;
-
-		return {
-			...rest,
-			...(causes && {
-				cause: causes.map(recursiveSerializeError),
-			}),
-		} satisfies ErrorObject;
+		return serializeCustomError(err);
 	}
-
 	if (isErrorLike(err)) {
-		const { name, message, stack, cause, code, ...rest } = serializeError(err);
-
-		return {
-			...(name && { name }),
-			...(message && { message }),
-			...(code && { code }),
-			...(stack && { stack }),
-			...(!!cause && { cause: [recursiveSerializeError(cause)] }),
-			...(rest && { debug: rest }),
-		};
+		return serializeGenericError(err);
 	}
-
-	// Not an error object, maybe primitive or null, undefined
-	return {
-		name: "Error",
-		message: String(err),
-		debug: {
-			typeofErr: typeof err,
-			err: String(err),
-		},
-	};
+	return serializeNonError(err);
 }
 
 export { recursiveSerializeError as serializeError };
