@@ -18,9 +18,13 @@ node_modules: package.json
 typecheck: node_modules tsconfig.json $(SRCS)
 	pnpm exec tsc
 
-.PHONY: pretty
-pretty: node_modules
-	pnpm exec prettier --write .
+.PHONY: lint
+lint: node_modules
+	pnpm exec oxlint
+
+.PHONY: fmt
+fmt: node_modules
+	pnpm exec oxfmt
 
 .PHONY: publint
 publint: typecheck

@@ -179,7 +179,9 @@ export class CustomError extends Error {
 	public toJSON() {
 		// Freeze on first read: we no longer exclusively own #debug once published.
 		// deepFreeze is idempotent — re-runs short-circuit on Object.isFrozen.
-		if (this.#debug != null) deepFreeze(this.#debug);
+		if (this.#debug != null) {
+			deepFreeze(this.#debug);
+		}
 		return {
 			name: this.name,
 			message: this.message,
